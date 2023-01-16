@@ -29,7 +29,7 @@
 # define SOCKET_TYPE SOCK_STREAM //SOCK_STREAM -> TCP, SOCK_DGRAM -> UDP
 # define SOCKET_PROTOCOL 0 // 0 -> IP protocol
 # define MAX_CLIENTS 1024
-
+# define BUFFER_SIZE 1024
 
 class Server
 {
@@ -37,14 +37,14 @@ private:
     const unsigned int _port;
     int _sockfd;
     std::vector<pollfd> clients;
-    void add_client();
+    void _accept_client();
+    // void _recive_buffer();
+    // void _send_buffer();
 
 public:
     Server(const unsigned int port);
     int start();
     ~Server();
 };
-
-
 
 #endif

@@ -21,5 +21,7 @@ int main() {
     Server *server = new Server(PORT);
 
     server->start();
+
+    delete(server);
     return 0;
 }

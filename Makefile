@@ -1,6 +1,6 @@
 NAME = ircserver
 
-SRCS = src/main.cpp
+SRCS = src/server/Server.cpp src/main.cpp
 
 OBJ = $(SRCS:.cpp=.o)
 CPP = c++

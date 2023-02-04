@@ -6,7 +6,7 @@
 /*   By: ptorres <ptorres@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 17:22:34 by ptorres           #+#    #+#             */
-/*   Updated: 2023/02/04 17:32:35 by ptorres          ###   ########.fr       */
+/*   Updated: 2023/02/04 17:37:13 by ptorres          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 class Client { 
     public:
-        std::string nick;
-        std::string id;
+        std::string nick; // max 9 characters
         std::string user_type;
+        std::string real_host;
+        std::string username;
+        
         Client();
         ~Client();
     private:

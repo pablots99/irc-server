@@ -6,15 +6,16 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:33:31 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/04 18:04:25 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/02/04 19:48:49 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/cmd.hpp"
 # include "../includes/utils.hpp"
+# include "../includes/reply.hpp"
 # include <iostream>
 
-Cmd::Cmd(std::string const& line)
+Cmd::Cmd(std::string const& line, User* user)
 //Assuming space as command deimiter and command name is first parameter.
 //TODO: need to be adapted to actual RFC 1459
 {
@@ -22,7 +23,7 @@ Cmd::Cmd(std::string const& line)
 	_cmdName = tmp[0];
 	for (size_t i = 1; i < tmp.size(); i++)
 		_cmdArgs.push_back(tmp[i]);
-	_handle_commands(_cmdName, _cmdArgs);
+	_handle_commands(_cmdName, _cmdArgs, user);
 }
 
 Cmd::~Cmd(void)
@@ -54,14 +55,18 @@ const std::vector<std::string>& Cmd::getCmdArgs() const
 	return _cmdArgs;
 }
 
-void Cmd::_handle_commands(std::string cmdName, std::vector<std::string> cmdArgs)
+void Cmd::_handle_commands(std::string cmdName, std::vector<std::string> cmdArgs, User* user)
 {
-	if (cmdName == "PASS")
+	if (cmdName == "USER")
 	{
-		//TODO: Pass Class needs to be created to handle PASS command, meanwhile:
-		std::cout << "PASS command with Args: "  << std::endl;
-		for (size_t i = 0; i < cmdArgs.size(); i++)
-			std::cout << "Cmd[" << i << "]" << cmdArgs[i] << std::endl;
+		//TODO: User Class needs to be created to handle USER command, meanwhile:	
+		if (cmdArgs.size() < 4)
+			throw std::runtime_error(Error(ERR_NEEDMOREPARAMS));
+		//TODO: Parse: each arg is in correct format
+		user->setUsername(cmdArgs[0]);
+		user->setMode(cmdArgs[1]);
+		//user->setUnused(cmdArgs[2]);
+		user->setRealname(cmdArgs[3]);
 	}
 
 }

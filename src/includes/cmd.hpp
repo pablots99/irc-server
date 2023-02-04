@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:06:03 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/01/22 20:39:35 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/02/04 19:45:57 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #ifndef CMD_HPP
 # define CMD_HPP
 
+# include "user.hpp"
 # include <string>
 # include <vector>
 
@@ -22,10 +23,10 @@ class Cmd
 	private:
 		std::string _cmdName;
 		std::vector<std::string> _cmdArgs;
-		void _handle_commands(std::string cmdName, std::vector<std::string> cmdArgs);
+		void _handle_commands(std::string cmdName, std::vector<std::string> cmdArgs, User* user);
 
 	public:
-		Cmd(std::string const& line);
+		Cmd(std::string const& line, User* user);
 		~Cmd();
 		Cmd(Cmd const& src);
 		Cmd& operator=(Cmd const& src);

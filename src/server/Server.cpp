@@ -158,7 +158,7 @@ void Server::_user_first_message(char buffer[BUFFER_SIZE], int client_fd) {
 
 	user->set_fd(client_fd);
 	//Call Cmd constructor passing line written by client as argument
-	Cmd c(line);
+	Cmd c(line, user);
 }
 
 

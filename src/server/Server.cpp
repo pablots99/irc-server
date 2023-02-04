@@ -90,7 +90,7 @@ int Server::start() {
                 int received = recv(clients[i].fd, buffer, sizeof(buffer), 0);
                 std::cout << "fd_: " << clients[i].fd << " events: " << clients[i].events << " reverts: " << clients[i].revents << std::endl;
                 //Read commands send by client
-				_read_command(buffer);
+				_read_command(buffer, clients[i].fd);
                 if (received < 0) {
                     std::cerr << "Error receiving data from client" << std::endl;
                     continue;
@@ -124,13 +124,12 @@ int Server::start() {
 // }
 
 
-void Server::_read_command(char buffer[BUFFER_SIZE]) {
-	std::string line(buffer);
+void Server::_read_command(char buffer[BUFFER_SIZE], int client_fd) {
+	//TODO: Define logic for existing users
+	//Logic to register a new user
+	_user_first_message(buffer, client_fd);
 	
-	std::cout << "Reading command..." << std::endl;
 	
-	//Call Cmd constructor passing line written by client as argument
-	Cmd c(line);
 }
 
 void Server::_accept_client() {
@@ -150,6 +149,17 @@ void Server::_accept_client() {
 
     std::cout << "New client connected" << std::endl;
 }
+
+
+void Server::_user_first_message(char buffer[BUFFER_SIZE], int client_fd) {
+
+
+	std::string line(buffer);
+	
+	//Call Cmd constructor passing line written by client as argument
+	Cmd c(line);
+}
+
 
 
 Server::~Server() {

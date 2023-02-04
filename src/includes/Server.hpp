@@ -38,6 +38,7 @@ class Server
 	    std::vector<pollfd> clients;
 		void _read_command(char buffer[BUFFER_SIZE]);
 	    void _accept_client();
+		void _user_first_message(char buffer[BUFFER_SIZE], int client_fd);
 	    // void _recive_buffer();
 	    // void _send_buffer();
 

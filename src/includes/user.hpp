@@ -1,22 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.hpp                                         :+:      :+:    :+:   */
+/*   user.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/04 17:22:34 by ptorres           #+#    #+#             */
-/*   Updated: 2023/02/04 18:00:38 by nlutsevi         ###   ########.fr       */
+/*   Created: 2023/02/04 18:22:58 by nlutsevi          #+#    #+#             */
+/*   Updated: 2023/02/04 19:23:26 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CLIENT_HPP
-# define CLIENT_HPP
 
+
+#ifndef USER_HPP
+# define USER_HPP
+
+# include "server.hpp"
 # include <iostream>
 
-class Client { 
+class User { 
     private:
+		int 					_client_fd;
+		struct sockaddr_in* 	_client_addr;
+		socklen_t* 				_client_addr_size;
 	 	std::string _nickname; // max 9 characters
 		std::string _username;
 		std::string	_mode;
@@ -31,11 +37,14 @@ class Client {
         // std::map<channel> _channels;
 	
 	public:
-    	Client();
-        ~Client();
-		Client(Client const& src);
-		Client& operator=(Client const& src);
+    	User();
+        ~User();
+		User(User const& src);
+		User& operator=(User const& src);
 
+		const int 						&getClientFd() const;
+		struct sockaddr_in* 			getClientAddr() const;
+		socklen_t* 						getClientAddrSize() const;
 		const std::string 				&getNickname() const;
 		const std::string 				&getUsername() const;
 		const std::string 				&getMode() const;
@@ -49,10 +58,13 @@ class Client {
 		// const std::string 				&getPort() const;
 		// const std::map<channel> 		&getChannels() const;
 
-		void setNickname(std::string const& nickname);
-		void setUsername(std::string const& username);
-		void setMode(std::string const& mode);
-		void setRealname(std::string const& realname);
+		void setClientFd(int client_fd);
+		void setClientAddr(sockaddr_in* client_addr);
+		void setClientAddrSize(socklen_t* client_addr_size);
+		void setNickname(std::string nickname);
+		void setUsername(std::string username);
+		void setMode(std::string mode);
+		void setRealname(std::string realname);
 		// void setHostname(std::string const& hostname);
 		// void setServername(std::string const& servername);
 		// void setServerinfo(std::string const& serverinfo);

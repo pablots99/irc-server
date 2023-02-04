@@ -113,6 +113,16 @@ int Server::start() {
     return 1;
 }
 
+// void Server::_recive_buffer() {
+//	}
+
+// void Server::_send_buffer(int fd) {
+//     for (size_t j = 1; j < clients.size(); j++) {
+//         if (clients[j].fd == fd) continue;
+//             send(clients[j].fd, buffer, received, 0);
+//     }
+// }
+
 
 void Server::_read_command(char buffer[BUFFER_SIZE]) {
 	std::string line(buffer);

@@ -6,12 +6,12 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:33:31 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/01/22 21:39:35 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/02/04 18:03:49 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "Cmd.hpp"
-# include "../utils/utils.hpp"
+# include "../includes/cmd.hpp"
+# include "../includes/utils.hpp"
 # include <iostream>
 
 Cmd::Cmd(std::string const& line)

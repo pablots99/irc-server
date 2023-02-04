@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/04 17:49:12 by ptorres           #+#    #+#             */
-/*   Updated: 2023/01/16 21:03:22 by marvin           ###   ########.fr       */
+/*   Updated: 2023/02/04 18:02:43 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include <iostream>
-#include "server/Server.hpp"
+#include "includes/server.hpp"
 
 #define PORT 3490
 

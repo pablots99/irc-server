@@ -70,7 +70,7 @@ int Server::start() {
         /*Bitwise AND that checks if the `POLLIN` event occurred on the listener socket fd.
         If it did occur, this expression will evaluate to true meeaning there is a new client*/
         if(clients[0].revents & POLLIN) {
-			_accept_client();
+            _accept_client();
 			//TODO: After a client is accepted he needs to register. The recommended order of commands during registration is as follows: 
 			//TODO: Figure out which ones to use in our IRC
 				//- CAP LS 302
@@ -91,7 +91,7 @@ int Server::start() {
                 std::cout << "fd_: " << clients[i].fd << " events: " << clients[i].events << " reverts: " << clients[i].revents << std::endl;
                 //Read commands send by client
 				_read_command(buffer);
-				if (received < 0) {
+                if (received < 0) {
                     std::cerr << "Error receiving data from client" << std::endl;
                     continue;
                 }

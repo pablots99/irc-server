@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./Server.hpp"
-#include "../commands/Cmd.hpp"
+#include "../includes/Server.hpp"
+#include "../includes/Cmd.hpp"
 
 Server::Server(const unsigned int port): _port(port)
 {

@@ -23,7 +23,6 @@
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <poll.h>
-# include <vector>
 
 # define SOCKET_DOMAIN AF_INET // AF_ LOCAL -> localhost, AF_INET -> ipv4, AF_INET_6 -> ipv6
 # define SOCKET_TYPE SOCK_STREAM //SOCK_STREAM -> TCP, SOCK_DGRAM -> UDP
@@ -33,18 +32,19 @@
 
 class Server
 {
-private:
-    const unsigned int _port;
-    int _sockfd;
-    std::vector<pollfd> clients;
-    void _accept_client();
-    // void _recive_buffer();
-    // void _send_buffer();
+	private:
+	    const unsigned int _port;
+	    int _sockfd;
+	    std::vector<pollfd> clients;
+		void _read_command(char buffer[BUFFER_SIZE]);
+	    void _accept_client();
+	    // void _recive_buffer();
+	    // void _send_buffer();
 
-public:
-    Server(const unsigned int port);
-    int start();
-    ~Server();
+	public:
+	    Server(const unsigned int port);
+	    int start();
+	    ~Server();
 };
 
 #endif

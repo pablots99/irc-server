@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "./Server.hpp"
-
+#include "../commands/Cmd.hpp"
 
 Server::Server(const unsigned int port): _port(port)
 {
@@ -70,7 +70,16 @@ int Server::start() {
         /*Bitwise AND that checks if the `POLLIN` event occurred on the listener socket fd.
         If it did occur, this expression will evaluate to true meeaning there is a new client*/
         if(clients[0].revents & POLLIN) {
-            _accept_client();
+			_accept_client();
+			//TODO: After a client is accepted he needs to register. The recommended order of commands during registration is as follows: 
+			//TODO: Figure out which ones to use in our IRC
+				//- CAP LS 302
+				//- PASS
+				//- NICK and USER
+				//- Capability Negotiation
+				//- SASL (if negotiated)
+				//- CAP END
+			
         }
 
 
@@ -80,7 +89,9 @@ int Server::start() {
                 char buffer[BUFFER_SIZE];
                 int received = recv(clients[i].fd, buffer, sizeof(buffer), 0);
                 std::cout << "fd_: " << clients[i].fd << " events: " << clients[i].events << " reverts: " << clients[i].revents << std::endl;
-                if (received < 0) {
+                //Read commands send by client
+				_read_command(buffer);
+				if (received < 0) {
                     std::cerr << "Error receiving data from client" << std::endl;
                     continue;
                 }
@@ -103,9 +114,7 @@ int Server::start() {
 }
 
 // void Server::_recive_buffer() {
-
-
-// }
+//	}
 
 // void Server::_send_buffer(int fd) {
 //     for (size_t j = 1; j < clients.size(); j++) {
@@ -113,6 +122,16 @@ int Server::start() {
 //             send(clients[j].fd, buffer, received, 0);
 //     }
 // }
+
+
+void Server::_read_command(char buffer[BUFFER_SIZE]) {
+	std::string line(buffer);
+	
+	std::cout << "Reading command..." << std::endl;
+	
+	//Call Cmd constructor passing line written by client as argument
+	Cmd c(line);
+}
 
 void Server::_accept_client() {
     int new_client = accept(_sockfd, NULL, NULL);
@@ -130,7 +149,6 @@ void Server::_accept_client() {
     clients.push_back(_poll);
 
     std::cout << "New client connected" << std::endl;
- 
 }
 
 

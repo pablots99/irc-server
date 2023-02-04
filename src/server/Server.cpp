@@ -153,9 +153,10 @@ void Server::_accept_client() {
 
 void Server::_user_first_message(char buffer[BUFFER_SIZE], int client_fd) {
 
-
+	user	*User = new user();
 	std::string line(buffer);
-	
+
+	user->set_fd(client_fd);
 	//Call Cmd constructor passing line written by client as argument
 	Cmd c(line);
 }

@@ -36,7 +36,7 @@ class Server
 	    const unsigned int _port;
 	    int _sockfd;
 	    std::vector<pollfd> clients;
-		void _read_command(char buffer[BUFFER_SIZE]);
+		void _read_command(char buffer[BUFFER_SIZE], int fd);
 	    void _accept_client();
 		void _user_first_message(char buffer[BUFFER_SIZE], int client_fd);
 	    // void _recive_buffer();

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../includes/server.hpp"
+#include "../includes/user.hpp"
 #include "../includes/cmd.hpp"
 
 Server::Server(const unsigned int port): _port(port)

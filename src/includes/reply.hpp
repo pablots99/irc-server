@@ -1,27 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   reply.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/04 17:49:12 by ptorres           #+#    #+#             */
-/*   Updated: 2023/02/04 18:02:43 by nlutsevi         ###   ########.fr       */
+/*   Created: 2023/02/04 19:34:27 by nlutsevi          #+#    #+#             */
+/*   Updated: 2023/02/04 19:40:05 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef REPLY_HPP
+# define REPLY_HPP
 
-#include <iostream>
-#include "includes/server.hpp"
+# define ERR_NEEDMOREPARAMS "461" // Not enough parameters
 
-#define PORT 3490
+# include <iostream>
 
-int main() { 
+class Reply
+{
+	public:
+		Reply(void);
+		~Reply(void);
+		Reply(Reply const& src);
+		Reply& operator=(Reply const& src);
 
-    Server *server = new Server(PORT);
+		static std::string		Error(std::string errCode);
 
-    server->start();
+};
+std::string		Error(std::string errCode);
 
-    delete(server);
-    return 0;
-}
+#endif

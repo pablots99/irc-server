@@ -1,27 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   reply.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/04 17:49:12 by ptorres           #+#    #+#             */
-/*   Updated: 2023/02/04 18:02:43 by nlutsevi         ###   ########.fr       */
+/*   Created: 2023/02/04 19:40:36 by nlutsevi          #+#    #+#             */
+/*   Updated: 2023/02/04 19:42:52 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../includes/reply.hpp"
 
-#include <iostream>
-#include "includes/server.hpp"
+std::string		Error(std::string errCode)
+{
+	std::string		err;
 
-#define PORT 3490
-
-int main() { 
-
-    Server *server = new Server(PORT);
-
-    server->start();
-
-    delete(server);
-    return 0;
+	if (errCode == ERR_NEEDMOREPARAMS)
+		err = "461 :Not enough parameters";
+	return err;
 }

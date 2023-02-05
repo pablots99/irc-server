@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./Server.hpp"
-#include "../commands/Cmd.hpp"
+#include "../includes/server.hpp"
+#include "../includes/cmd.hpp"
 
 Server::Server(const unsigned int port): _port(port)
 {
@@ -70,7 +70,7 @@ int Server::start() {
         /*Bitwise AND that checks if the `POLLIN` event occurred on the listener socket fd.
         If it did occur, this expression will evaluate to true meeaning there is a new client*/
         if(clients[0].revents & POLLIN) {
-			_accept_client();
+            _accept_client();
 			//TODO: After a client is accepted he needs to register. The recommended order of commands during registration is as follows: 
 			//TODO: Figure out which ones to use in our IRC
 				//- CAP LS 302
@@ -90,8 +90,8 @@ int Server::start() {
                 int received = recv(clients[i].fd, buffer, sizeof(buffer), 0);
                 std::cout << "fd_: " << clients[i].fd << " events: " << clients[i].events << " reverts: " << clients[i].revents << std::endl;
                 //Read commands send by client
-				_read_command(buffer);
-				if (received < 0) {
+				_read_command(buffer, clients[i].fd);
+                if (received < 0) {
                     std::cerr << "Error receiving data from client" << std::endl;
                     continue;
                 }
@@ -124,13 +124,12 @@ int Server::start() {
 // }
 
 
-void Server::_read_command(char buffer[BUFFER_SIZE]) {
-	std::string line(buffer);
+void Server::_read_command(char buffer[BUFFER_SIZE], int client_fd) {
+	//TODO: Define logic for existing users
+	//Logic to register a new user
+	_user_first_message(buffer, client_fd);
 	
-	std::cout << "Reading command..." << std::endl;
 	
-	//Call Cmd constructor passing line written by client as argument
-	Cmd c(line);
 }
 
 void Server::_accept_client() {
@@ -150,6 +149,18 @@ void Server::_accept_client() {
 
     std::cout << "New client connected" << std::endl;
 }
+
+
+void Server::_user_first_message(char buffer[BUFFER_SIZE], int client_fd) {
+
+	user	*User = new user();
+	std::string line(buffer);
+
+	user->set_fd(client_fd);
+	//Call Cmd constructor passing line written by client as argument
+	Cmd c(line, user);
+}
+
 
 
 Server::~Server() {

@@ -1,9 +1,11 @@
 NAME = ircserver
 
-SRCS = 	src/server/Server.cpp \
+SRCS = 	src/server/server.cpp \
 		src/main.cpp \
-		src/commands/Cmd.cpp \
-		src/utils/splitString.cpp
+		src/commands/cmd.cpp \
+		src/utils/splitString.cpp \
+		src/client/reply.cpp \
+		src/client.user.cpp
 
 OBJ = $(SRCS:.cpp=.o)
 CPP = c++

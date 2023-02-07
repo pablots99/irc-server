@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 21:32:35 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/07 21:38:30 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/02/07 22:04:56 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <iostream>
 # include "../includes/user.hpp"
+# include "../includes/reply.hpp"
 
 class UserCmd {
 	public:

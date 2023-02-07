@@ -5,7 +5,8 @@ SRCS = 	src/server/server.cpp \
 		src/commands/cmd.cpp \
 		src/utils/splitString.cpp \
 		src/client/reply.cpp \
-		src/client/user.cpp
+		src/client/user.cpp \
+		src/commands/userCmd.cpp
 
 OBJ = $(SRCS:.cpp=.o)
 CPP = c++

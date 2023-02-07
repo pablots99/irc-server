@@ -6,13 +6,14 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:33:31 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/06 19:51:48 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/02/07 21:41:19 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/cmd.hpp"
 # include "../includes/utils.hpp"
 # include "../includes/reply.hpp"
+# include "../includes/userCmd.hpp"
 # include <iostream>
 
 Cmd::Cmd(std::string const& line, User* user)
@@ -66,16 +67,15 @@ const std::vector<std::string>& Cmd::getCmdArgs() const
 
 void Cmd::_handle_commands(std::string cmdName, std::vector<std::string> cmdArgs, User* user)
 {
+	Reply *r = new Reply(); 
+	if (cmdArgs.size() == 0)
+		r->notify(user->getClientFd(), r->Error(ERR_NEEDMOREPARAMS));
 	if (cmdName == "USER")
 	{
-		//TODO: User Class needs to be created to handle USER command, meanwhile:	
-		if (cmdArgs.size() < 4)
-			throw std::runtime_error(Error(ERR_NEEDMOREPARAMS));
-		//TODO: Parse: each arg is in correct format
-		user->setUsername(cmdArgs[0]);
-		user->setMode(cmdArgs[1]);
-		//user->setUnused(cmdArgs[2]);
-		user->setRealname(cmdArgs[3]);
+		UserCmd *u = new UserCmd();
+		u->execute(cmdArgs, user, r);
+		delete u;
 	}
+	delete r;
 
 }

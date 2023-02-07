@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:33:31 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/04 19:48:49 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/02/06 19:51:48 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,19 @@ Cmd::Cmd(std::string const& line, User* user)
 //Assuming space as command deimiter and command name is first parameter.
 //TODO: need to be adapted to actual RFC 1459
 {
-	std::vector<std::string> tmp = splitString(line, ' ');
-	_cmdName = tmp[0];
-	for (size_t i = 1; i < tmp.size(); i++)
-		_cmdArgs.push_back(tmp[i]);
+	std::vector<std::string> tmp;
+	std::vector<std::string> tmp2;
+	tmp = splitString(line, ':');
+	if (tmp.size() == 1)
+		tmp2 = splitString(line, ' ');
+	else
+	{
+		tmp2 = splitString(tmp[0], ' ');
+		tmp2.push_back(tmp[1]);
+	}
+	_cmdName = tmp2[0];
+	for (size_t i = 1; i < tmp2.size(); i++)
+		_cmdArgs.push_back(tmp2[i]);
 	_handle_commands(_cmdName, _cmdArgs, user);
 }
 

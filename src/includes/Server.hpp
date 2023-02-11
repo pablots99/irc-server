@@ -23,6 +23,8 @@
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <poll.h>
+# include <chrono>
+# include "bbdd.hpp"
 
 # define SOCKET_DOMAIN AF_INET // AF_ LOCAL -> localhost, AF_INET -> ipv4, AF_INET_6 -> ipv6
 # define SOCKET_TYPE SOCK_STREAM //SOCK_STREAM -> TCP, SOCK_DGRAM -> UDP
@@ -30,7 +32,7 @@
 # define MAX_CLIENTS 1024
 # define BUFFER_SIZE 1024
 
-class Server
+class Server : public Bbdd
 {
 	private:
 	    const unsigned int _port;
@@ -44,8 +46,10 @@ class Server
 
 	public:
 	    Server(const unsigned int port);
-	    int start();
-	    ~Server();
+		~Server();
+	    int 			start();
+		void 			ping_check();
+		void 			send_ping_to_user(int fd);
 };
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 18:04:56 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/04 19:23:48 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/02/11 22:45:05 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 User::User(void)
 {
+	_onHold = false;
 	_client_addr = new sockaddr_in();
 	_client_addr_size = new socklen_t(sizeof(_client_addr));
 }
@@ -36,9 +37,9 @@ User&			User::operator=(User const& src)
 {
 	if (this != &src)
 	{
-		_client_fd = src.getClientFd();
-		_client_addr = new sockaddr_in(*src.getClientAddr());
-		_client_addr_size = new socklen_t(*src.getClientAddrSize());
+		_client_fd = src.getFd();
+		_client_addr = new sockaddr_in(*src.getAddr());
+		_client_addr_size = new socklen_t(*src.getAddrSize());
 		_nickname = src.getNickname();
 		_username = src.getUsername();
 		_mode = src.getMode();
@@ -48,19 +49,19 @@ User&			User::operator=(User const& src)
 }
 
 
-const int		&User::getClientFd(void) const
+const int		&User::getFd(void) const
 {
 	return _client_fd;
 }
 
 
-struct sockaddr_in*		User::getClientAddr(void) const
+struct sockaddr_in*		User::getAddr(void) const
 {
 	return _client_addr;
 }
 
 
-socklen_t*				User::getClientAddrSize(void) const
+socklen_t*				User::getAddrSize(void) const
 {
 	return _client_addr_size;
 }
@@ -87,6 +88,21 @@ const std::string		&User::getMode(void) const
 const std::string		&User::getRealname(void) const
 {
 	return _realname;
+}
+
+const bool				&User::getOnHold(void) const
+{
+	return _onHold;
+}
+
+const time_t 			&User::getPingSent(void) const
+{
+	return _pingSent;
+}
+
+const time_t 			&User::getPingReceived(void) const
+{
+	return _pingReceived;
 }
 
 
@@ -129,6 +145,22 @@ void					User::setMode(std::string mode)
 void					User::setRealname(std::string realname)
 {
 	_realname = realname;
+}
+
+void					User::setOnHold(bool onHold)
+{
+	_onHold = onHold;
+}
+
+void					User::setPingSent(time_t pingSent)
+{
+	_pingSent = pingSent;
+}
+
+
+void					User::setPingReceived(time_t pingReceived)
+{
+	_pingReceived = pingReceived;
 }
 
 

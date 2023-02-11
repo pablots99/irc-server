@@ -13,8 +13,9 @@
 #include "../includes/server.hpp"
 #include "../includes/user.hpp"
 #include "../includes/cmd.hpp"
+#include "../includes/bbdd.hpp"
 
-Server::Server(const unsigned int port): _port(port)
+Server::Server(const unsigned int port): Bbdd(), _port(port)
 {
 
     //Socket creation
@@ -50,6 +51,17 @@ Server::Server(const unsigned int port): _port(port)
     clients.push_back(_poll);
 
     std::cout << "Server created" << std::endl;
+}
+
+Server::~Server() {
+    
+    shutdown(this->_sockfd,SHUT_RDWR);
+    //TODO use iterators instead of size
+    for (size_t i = 1; i < this->clients.size(); i++) {
+         shutdown(this->clients[i].fd,SHUT_RDWR);
+         close(this->clients[i].fd);
+    }
+    close(this->_sockfd);
 }
 
 int Server::start() {
@@ -108,6 +120,7 @@ int Server::start() {
                     send(clients[j].fd, buffer, received, 0);
                 }
             }
+			ping_check(clients[i].fd);
         }
     }
 
@@ -158,19 +171,30 @@ void Server::_user_first_message(char buffer[BUFFER_SIZE], int client_fd) {
 	std::string line(buffer);
 
 	user->setClientFd(client_fd);
+	_usersMap.insert(std::pair<int, User*>(client_fd, user));
 	//Call Cmd constructor passing line written by client as argument
 	Cmd c(line, user);
 }
 
 
+void Server::ping_check(int fd) {
+	User *user = getUser(fd);
+	if (user->getOnHold()) {
+		//TODO: manage ping timeout
+	}
 
-Server::~Server() {
-    
-    shutdown(this->_sockfd,SHUT_RDWR);
-    //TODO use iterators instead of size
-    for (size_t i = 1; i < this->clients.size(); i++) {
-         shutdown(this->clients[i].fd,SHUT_RDWR);
-         close(this->clients[i].fd);
-    }
-    close(this->_sockfd);
+
+	send_ping_to_user(fd);
 }
+
+void Server::send_ping_to_user(int fd) {
+	User *user = getUser(fd);
+	//TODO: apapt to actual ping from irc-hispano
+	std::string ping = "PING :irc.42.fr\r\n";
+	send(fd, ping.c_str(), ping.length(), 0);
+	user->setPingSent(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+	user->setOnHold(true);
+}
+
+
+

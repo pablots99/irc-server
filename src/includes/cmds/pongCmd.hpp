@@ -1,24 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.hpp                                          :+:      :+:    :+:   */
+/*   pongCmd.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/22 19:55:02 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/12 18:59:54 by nlutsevi         ###   ########.fr       */
+/*   Created: 2023/02/12 18:45:34 by nlutsevi          #+#    #+#             */
+/*   Updated: 2023/02/12 18:47:00 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_HPP
-# define UTILS_HPP
+#ifndef PONGCMD_HPP
+# define PONGCMD_HPP
+
+# include <iostream>
+# include "../user.hpp"
+# include "../reply.hpp"
 
 
-# include <string>
-# include <vector>
+class PongCmd {
+	public:
+		PongCmd();
+		~PongCmd();
+		PongCmd(PongCmd const& src);
+		PongCmd& operator=(PongCmd const& src);
 
-std::vector<std::string> 	splitString(std::string const& str, char delim);
-std::string					generatePingRandomString(int length);
+		void		execute(std::vector<std::string> cmdArgs, User* user, Reply* reply);
+};
 
-
-#endif
+# endif

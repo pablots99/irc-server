@@ -1,24 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.hpp                                          :+:      :+:    :+:   */
+/*   userCmd.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/22 19:55:02 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/12 18:59:54 by nlutsevi         ###   ########.fr       */
+/*   Created: 2023/02/07 21:32:35 by nlutsevi          #+#    #+#             */
+/*   Updated: 2023/02/12 19:54:59 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_HPP
-# define UTILS_HPP
+#ifndef USERCMD_HPP
+# define USERCMD_HPP
+
+# include <iostream>
+# include "../user.hpp"
+# include "../reply.hpp"
+
+class UserCmd {
+	public:
+		UserCmd();
+		~UserCmd();
+		UserCmd(UserCmd const& src);
+		UserCmd& operator=(UserCmd const& src);
+
+		void		execute(std::vector<std::string> cmdArgs, User* user, Reply* reply, bool first_time);
+};
 
 
-# include <string>
-# include <vector>
 
-std::vector<std::string> 	splitString(std::string const& str, char delim);
-std::string					generatePingRandomString(int length);
-
-
-#endif
+# endif

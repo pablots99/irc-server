@@ -6,15 +6,17 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 18:04:56 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/11 22:45:05 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/02/12 22:29:58 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/user.hpp"
 
+
 User::User(void)
 {
 	_onHold = false;
+	_isRegistered = false;
 	_client_addr = new sockaddr_in();
 	_client_addr_size = new socklen_t(sizeof(_client_addr));
 }
@@ -47,6 +49,8 @@ User&			User::operator=(User const& src)
 	}
 	return *this;
 }
+
+//std::map<int, User> 		User::usersFdMap;
 
 
 const int		&User::getFd(void) const
@@ -105,6 +109,16 @@ const time_t 			&User::getPingReceived(void) const
 	return _pingReceived;
 }
 
+const bool				&User::getIsRegistered(void) const
+{
+	return _isRegistered;
+}
+
+const time_t 			&User::getEntersChat(void) const
+{
+	return _entersChat;
+}
+
 
 void					User::setClientFd(int client_fd)
 {
@@ -161,6 +175,16 @@ void					User::setPingSent(time_t pingSent)
 void					User::setPingReceived(time_t pingReceived)
 {
 	_pingReceived = pingReceived;
+}
+
+void					User::setIsRegistered(bool isRegistered)
+{
+	_isRegistered = isRegistered;
+}
+
+void					User::setEntersChat(time_t entersChat)
+{
+	_entersChat = entersChat;
 }
 
 

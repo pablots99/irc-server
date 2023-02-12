@@ -1,32 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   userCmd.hpp                                        :+:      :+:    :+:   */
+/*   nickCmd.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/07 21:32:35 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/07 22:04:56 by nlutsevi         ###   ########.fr       */
+/*   Created: 2023/02/12 20:27:06 by nlutsevi          #+#    #+#             */
+/*   Updated: 2023/02/12 21:21:43 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef USERCMD_HPP
-# define USERCMD_HPP
+#include "../includes/cmds/nickCmd.hpp"
 
-# include <iostream>
-# include "../includes/user.hpp"
-# include "../includes/reply.hpp"
+nickCmd::nickCmd(void) {
+}
 
-class UserCmd {
-	public:
-		UserCmd();
-		~UserCmd();
-		UserCmd(UserCmd const& src);
-		UserCmd& operator=(UserCmd const& src);
+nickCmd::~nickCmd(void) {
+}
 
-		void		execute(std::vector<std::string> cmdArgs, User* user, Reply* reply);
-};
+nickCmd::nickCmd(nickCmd const& src) {
+	*this = src;
+}
 
+nickCmd&		nickCmd::operator=(nickCmd const& src) {
+	if (this != &src) {
+	}
+	return *this;
+}
 
-
-# endif
+void			nickCmd::execute(std::vector<std::string> cmdArgs, User* user, Reply* reply) {
+	(void)cmdArgs;
+	(void)user;
+	(void)reply;
+}

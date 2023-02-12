@@ -25,6 +25,8 @@
 # include <poll.h>
 # include <chrono>
 # include "bbdd.hpp"
+# include "cmd.hpp"
+# include "reply.hpp"
 
 # define SOCKET_DOMAIN AF_INET // AF_ LOCAL -> localhost, AF_INET -> ipv4, AF_INET_6 -> ipv6
 # define SOCKET_TYPE SOCK_STREAM //SOCK_STREAM -> TCP, SOCK_DGRAM -> UDP
@@ -32,23 +34,25 @@
 # define MAX_CLIENTS 1024
 # define BUFFER_SIZE 1024
 
+class Bbdd;
+
 class Server : public Bbdd
 {
 	private:
-	    const unsigned int _port;
+	    unsigned int _port;
 	    int _sockfd;
 	    std::vector<pollfd> clients;
 		void _read_command(char buffer[BUFFER_SIZE], int fd);
 	    void _accept_client();
-		void _user_first_message(char buffer[BUFFER_SIZE], int client_fd);
+		void _user_message(char buffer[BUFFER_SIZE], int client_fd, bool first_time);
 	    // void _recive_buffer();
 	    // void _send_buffer();
 
 	public:
-	    Server(const unsigned int port);
+	    Server(unsigned int port);
 		~Server();
 	    int 			start();
-		void 			ping_check();
+		void 			ping_check(int fd);
 		void 			send_ping_to_user(int fd);
 };
 

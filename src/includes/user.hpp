@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 18:22:58 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/11 22:42:29 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/02/12 22:26:38 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 #ifndef USER_HPP
 # define USER_HPP
 
-# include "server.hpp"
 # include <iostream>
+# include <sys/types.h>
+# include <sys/socket.h>
+# include <netinet/in.h>
 
 class User { 
     private:
@@ -30,6 +32,8 @@ class User {
 		bool 					_onHold;
 		time_t					_pingSent;
 		time_t					_pingReceived;
+		bool					_isRegistered;
+		time_t					_entersChat;
 		// std::string _hostname;
         // std::string _servername;
 		// std::string _serverinfo;
@@ -44,6 +48,7 @@ class User {
         ~User();
 		User(User const& src);
 		User& operator=(User const& src);
+		//std::map<int, User> 			usersFdMap;
 
 		const int 						&getFd() const;
 		struct sockaddr_in* 			getAddr() const;
@@ -55,6 +60,8 @@ class User {
 		const bool 						&getOnHold() const;
 		const time_t 					&getPingSent() const;
 		const time_t 					&getPingReceived() const;
+		const bool 						&getIsRegistered() const;
+		const time_t 					&getEntersChat() const;
 		// const std::string 				&getHostname() const;
 		// const std::string 				&getServername() const;
 		// const std::string 				&getServerinfo() const;
@@ -74,6 +81,8 @@ class User {
 		void setOnHold(bool onHold);
 		void setPingSent(time_t pingSent);
 		void setPingReceived(time_t pingReceived);
+		void setIsRegistered(bool isRegistered);
+		void setEntersChat(time_t entersChat);
 		// void setHostname(std::string const& hostname);
 		// void setServername(std::string const& servername);
 		// void setServerinfo(std::string const& serverinfo);

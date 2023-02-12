@@ -11,13 +11,10 @@
 /* ************************************************************************** */
 
 #include "../includes/server.hpp"
-#include "../includes/user.hpp"
-#include "../includes/cmd.hpp"
-#include "../includes/bbdd.hpp"
 
-Server::Server(const unsigned int port): Bbdd(), _port(port)
+Server::Server(unsigned int port) : Bbdd()
 {
-
+	this->_port = port;
     //Socket creation
     _sockfd = socket(SOCKET_DOMAIN,SOCKET_TYPE,SOCKET_PROTOCOL);
     if (_sockfd == 0)
@@ -84,19 +81,7 @@ int Server::start() {
         If it did occur, this expression will evaluate to true meeaning there is a new client*/
         if(clients[0].revents & POLLIN) {
             _accept_client();
-			//TODO: After a client is accepted he needs to register. The recommended order of commands during registration is as follows: 
-			//TODO: Figure out which ones to use in our IRC
-				//- CAP LS 302
-				//- PASS
-				//- NICK and USER
-				//- Capability Negotiation
-				//- SASL (if negotiated)
-				//- CAP END
-			
         }
-
-
-        //TODO Class client to do this actions
         for (size_t i = 1; i < clients.size(); i++) {
             if (clients[i].revents & POLLIN) {
                 char buffer[BUFFER_SIZE];
@@ -139,11 +124,11 @@ int Server::start() {
 
 
 void Server::_read_command(char buffer[BUFFER_SIZE], int client_fd) {
-	//TODO: Define logic for existing users
-	//Logic to register a new user
-	_user_first_message(buffer, client_fd);
-	
-	
+	User *user = getUser(client_fd);
+	bool first_time;
+	user == NULL ? first_time = true : first_time = false;
+	_user_message(buffer, client_fd, first_time);
+	delete user;
 }
 
 void Server::_accept_client() {
@@ -165,34 +150,52 @@ void Server::_accept_client() {
 }
 
 
-void Server::_user_first_message(char buffer[BUFFER_SIZE], int client_fd) {
-
-	User	*user = new User();
+void Server::_user_message(char buffer[BUFFER_SIZE], int client_fd, bool first_time) {
+	User *user = NULL;
 	std::string line(buffer);
 
+	first_time ? user = new User() : getUser(client_fd);
+	if (first_time) {
+		time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+		user->setEntersChat(now);
+	}
 	user->setClientFd(client_fd);
 	_usersMap.insert(std::pair<int, User*>(client_fd, user));
-	//Call Cmd constructor passing line written by client as argument
-	Cmd c(line, user);
+	//Call Cmd constructor (commands parser) passing line written by client as argument
+	Cmd c(line, user, first_time);
 }
 
 
 void Server::ping_check(int fd) {
+	time_t now;
+	time_t since_last_ping;
 	User *user = getUser(fd);
 	if (user->getOnHold()) {
-		//TODO: manage ping timeout
+		now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+		since_last_ping = now - user->getPingSent();
+		if (since_last_ping >= 120) {
+			std::cout << "User " << user->getUsername() << " has been disconnected for inactivity" << std::endl;
+			close(fd);
+			clients.erase(clients.begin() + fd);
+			_usersMap.erase(fd);
+		}
 	}
-
-
+	now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	time_t since_user_entered_chat = now - user->getEntersChat();
+	if (since_user_entered_chat >= 60 && (!user->getIsRegistered()))
+		throw std::runtime_error(CloseError("Registration timeout"));
+	//TODO:Since last message
 	send_ping_to_user(fd);
 }
 
 void Server::send_ping_to_user(int fd) {
+	time_t now;
 	User *user = getUser(fd);
 	//TODO: apapt to actual ping from irc-hispano
 	std::string ping = "PING :irc.42.fr\r\n";
 	send(fd, ping.c_str(), ping.length(), 0);
-	user->setPingSent(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+	now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	user->setPingSent(now);
 	user->setOnHold(true);
 }
 

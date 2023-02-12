@@ -1,7 +1,7 @@
 NAME = ircserver
 
 SRCS = 	src/server/bbdd.cpp \
-		src/server/server.cpp \
+		src/server/Server.cpp \
 		src/main.cpp \
 		src/commands/cmd.cpp \
 		src/commands/userCmd.cpp \
@@ -16,7 +16,7 @@ SRCS = 	src/server/bbdd.cpp \
 
 OBJ = $(SRCS:.cpp=.o)
 CPP = c++
-CPP_FLAGS = -Wall -Wextra -Werror --std=c++98
+CPP_FLAGS = -g3 -Wall -Wextra -Werror 
 
 all: $(NAME)
 

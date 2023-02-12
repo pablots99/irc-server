@@ -12,7 +12,7 @@
 
 
 #include <iostream>
-#include "includes/server.hpp"
+#include "includes/Server.hpp"
 
 #define PORT 3490
 

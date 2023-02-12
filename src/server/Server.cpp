@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/server.hpp"
+#include "../includes/Server.hpp"
 
 Server::Server(unsigned int port) : Bbdd()
 {
@@ -78,7 +78,7 @@ void 		Server::ping_check(int fd) {
 	now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 	time_t since_user_entered_chat = now - user->getEntersChat();
 	if (since_user_entered_chat >= 60 && (!user->getIsRegistered()))
-		throw std::runtime_error(CloseError("Registration timeout"));
+		throw std::runtime_error(CloseError(fd,"Registration timeout"));
 	//TODO:Since last message
 	send_ping_to_user(fd);
 }

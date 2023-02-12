@@ -18,7 +18,7 @@
 # define ERR_NOTREGISTERED "451" // You have not registered
 
 # include <iostream>
-# include "server.hpp"
+# include "Server.hpp"
 
 class Reply
 {
@@ -33,6 +33,6 @@ class Reply
 
 };
 
-std::string 				CloseError(std::string error);
+std::string 				CloseError(int client_fd, std::string error);
 
 #endif

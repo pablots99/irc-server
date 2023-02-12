@@ -61,6 +61,28 @@ Server::~Server() {
     close(this->_sockfd);
 }
 
+void 		Server::ping_check(int fd) {
+	time_t now;
+	time_t since_last_ping;
+	User *user = getUser(fd);
+	if (user->getOnHold()) {
+		now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+		since_last_ping = now - user->getPingSent();
+		if (since_last_ping >= 120) {
+			std::cout << "User " << user->getUsername() << " has been disconnected for inactivity" << std::endl;
+			close(fd);
+			clients.erase(clients.begin() + fd);
+			_usersMap.erase(fd);
+		}
+	}
+	now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	time_t since_user_entered_chat = now - user->getEntersChat();
+	if (since_user_entered_chat >= 60 && (!user->getIsRegistered()))
+		throw std::runtime_error(CloseError("Registration timeout"));
+	//TODO:Since last message
+	send_ping_to_user(fd);
+}
+
 int Server::start() {
     std::cout << "Server listening in port: " << this->_port << "..." << std::endl;
     while (true)
@@ -165,28 +187,6 @@ void Server::_user_message(char buffer[BUFFER_SIZE], int client_fd, bool first_t
 	Cmd c(line, user, first_time);
 }
 
-
-void Server::ping_check(int fd) {
-	time_t now;
-	time_t since_last_ping;
-	User *user = getUser(fd);
-	if (user->getOnHold()) {
-		now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-		since_last_ping = now - user->getPingSent();
-		if (since_last_ping >= 120) {
-			std::cout << "User " << user->getUsername() << " has been disconnected for inactivity" << std::endl;
-			close(fd);
-			clients.erase(clients.begin() + fd);
-			_usersMap.erase(fd);
-		}
-	}
-	now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-	time_t since_user_entered_chat = now - user->getEntersChat();
-	if (since_user_entered_chat >= 60 && (!user->getIsRegistered()))
-		throw std::runtime_error(CloseError("Registration timeout"));
-	//TODO:Since last message
-	send_ping_to_user(fd);
-}
 
 void Server::send_ping_to_user(int fd) {
 	time_t now;

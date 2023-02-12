@@ -10,7 +10,7 @@ SRCS = 	src/server/bbdd.cpp \
 		src/utils/splitString.cpp \
 		src/utils/generatePingRandomString.cpp \
 		src/client/reply.cpp \
-		src/client/user.cpp \
+		src/client/user.cpp
 		
 		
 

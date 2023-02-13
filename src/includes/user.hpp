@@ -34,6 +34,7 @@ class User {
 		time_t					_pingReceived;
 		bool					_isRegistered;
 		time_t					_entersChat;
+		bool					_firstTime;
 		// std::string _hostname;
         // std::string _servername;
 		// std::string _serverinfo;
@@ -62,6 +63,7 @@ class User {
 		const time_t 					&getPingReceived() const;
 		const bool 						&getIsRegistered() const;
 		const time_t 					&getEntersChat() const;
+		const bool						&getFirstTime() const;
 		// const std::string 				&getHostname() const;
 		// const std::string 				&getServername() const;
 		// const std::string 				&getServerinfo() const;
@@ -83,6 +85,7 @@ class User {
 		void setPingReceived(time_t pingReceived);
 		void setIsRegistered(bool isRegistered);
 		void setEntersChat(time_t entersChat);
+		void setFistTime(bool firtsTime);
 		// void setHostname(std::string const& hostname);
 		// void setServername(std::string const& servername);
 		// void setServerinfo(std::string const& serverinfo);

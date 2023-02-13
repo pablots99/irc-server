@@ -26,11 +26,11 @@ UserCmd& UserCmd::operator=(UserCmd const& src) {
 	return *this;
 }
 
-void		UserCmd::execute(std::vector<std::string> cmdArgs, User* user, Reply* reply, bool first_time) 
+void		UserCmd::execute(std::vector<std::string> cmdArgs, User* user, Reply* reply) 
 {
 	if (cmdArgs.size() < 4)
 		reply->notify(user->getFd(), reply->Error(ERR_NEEDMOREPARAMS, "USER"));
-	if (!first_time)
+	if (!user->getFirstTime())
 		reply->notify(user->getFd(), reply->Error(ERR_ALREADYREGISTRED, "USER"));
 	//TODO: Parse: each arg is in correct format
 	user->setUsername(cmdArgs[0]);

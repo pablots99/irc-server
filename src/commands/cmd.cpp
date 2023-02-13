@@ -16,7 +16,7 @@
 # include "../includes/cmds/userCmd.hpp"
 # include <iostream>
 
-Cmd::Cmd(std::string const& line, User* user, bool first_time)
+Cmd::Cmd(std::string const& line, User* user)
 //TODO: /r/n need to be managed
 {
 	std::vector<std::string> tmp;
@@ -32,7 +32,7 @@ Cmd::Cmd(std::string const& line, User* user, bool first_time)
 	_cmdName = tmp2[0];
 	for (size_t i = 1; i < tmp2.size(); i++)
 		_cmdArgs.push_back(tmp2[i]);
-	_handle_commands(_cmdName, _cmdArgs, user, first_time);
+	_handle_commands(_cmdName, _cmdArgs, user);
 }
 
 Cmd::~Cmd(void)
@@ -64,13 +64,13 @@ const std::vector<std::string>& Cmd::getCmdArgs() const
 	return _cmdArgs;
 }
 
-void Cmd::_handle_commands(std::string cmdName, std::vector<std::string> cmdArgs, User* user, bool first_time)
+void Cmd::_handle_commands(std::string cmdName, std::vector<std::string> cmdArgs, User* user)
 {
 	Reply *r = new Reply(); 
 	if (cmdName == "USER")
 	{
 		UserCmd *u = new UserCmd();
-		u->execute(cmdArgs, user, r, first_time);
+		u->execute(cmdArgs, user, r);
 		delete u;
 	}
 	else if (cmdName == "NICK")

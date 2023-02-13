@@ -51,37 +51,40 @@ Server::Server(unsigned int port) : Bbdd()
 }
 
 Server::~Server() {
-    
     shutdown(this->_sockfd,SHUT_RDWR);
     //TODO use iterators instead of size
     for (size_t i = 1; i < this->clients.size(); i++) {
-         shutdown(this->clients[i].fd,SHUT_RDWR);
-         close(this->clients[i].fd);
+        shutdown(this->clients[i].fd,SHUT_RDWR);
+        close(this->clients[i].fd);
     }
     close(this->_sockfd);
 }
 
-void 		Server::ping_check(int fd) {
+void 		Server::ping_check() {
 	time_t now;
-	time_t since_last_ping;
-	User *user = getUser(fd);
-	if (user->getOnHold()) {
-		now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-		since_last_ping = now - user->getPingSent();
-		if (since_last_ping >= 120) {
-			std::cout << "User " << user->getUsername() << " has been disconnected for inactivity" << std::endl;
-			close(fd);
-			clients.erase(clients.begin() + fd);
-			_usersMap.erase(fd);
-		}
-	}
-	now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-	time_t since_user_entered_chat = now - user->getEntersChat();
-	if (since_user_entered_chat >= 60 && (!user->getIsRegistered()))
-		throw std::runtime_error(CloseError(fd,"Registration timeout"));
-	//TODO:Since last message
-	send_ping_to_user(fd);
+    //time_t since_last_ping;
+    for (size_t i = 1; i < this->clients.size(); i++) {
+        
+        User *user = getUser(clients[i].fd);
+        now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        time_t since_user_entered_chat = now - user->getEntersChat();
+        if (since_user_entered_chat >= 60 && (!user->getIsRegistered()))
+            throw std::runtime_error(CloseError(clients[i].fd,"Registration timeout"));
+        //if (user->getOnHold()) {
+        //    now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        //    since_last_ping = now - user->getPingSent();
+        //    if (since_last_ping >= 120) {
+        //        std::cout << "User " << user->getUsername() << " has been disconnected for inactivity" << std::endl;
+        //        close(clients[i].fd);
+        //        clients.erase(clients.begin() + clients[i].fd);
+        //        _usersMap.erase(clients[i].fd);
+        //    }
+        //}
+        //TODO:Since last message
+        //send_ping_to_user(clients[i].fd);
+    }   
 }
+    
 
 int Server::start() {
     std::cout << "Server listening in port: " << this->_port << "..." << std::endl;
@@ -105,12 +108,13 @@ int Server::start() {
             _accept_client();
         }
         for (size_t i = 1; i < clients.size(); i++) {
+            User *user = _user_config(clients[i].fd);
             if (clients[i].revents & POLLIN) {
                 char buffer[BUFFER_SIZE];
                 int received = recv(clients[i].fd, buffer, sizeof(buffer), 0);
                 std::cout << "fd_: " << clients[i].fd << " events: " << clients[i].events << " reverts: " << clients[i].revents << std::endl;
                 //Read commands send by client
-				_read_command(buffer, clients[i].fd);
+				_read_command(buffer, clients[i].fd, user);
                 if (received < 0) {
                     std::cerr << "Error receiving data from client" << std::endl;
                     continue;
@@ -127,8 +131,8 @@ int Server::start() {
                     send(clients[j].fd, buffer, received, 0);
                 }
             }
-			ping_check(clients[i].fd);
         }
+        ping_check();
     }
 
     return 1;
@@ -145,12 +149,26 @@ int Server::start() {
 // }
 
 
-void Server::_read_command(char buffer[BUFFER_SIZE], int client_fd) {
-	User *user = getUser(client_fd);
-	bool first_time;
-	user == NULL ? first_time = true : first_time = false;
-	_user_message(buffer, client_fd, first_time);
-	delete user;
+User*   Server::_user_config(int client_fd) {
+    User *user = getUser(client_fd);
+    if (user == NULL)
+        user = new User();
+        
+    if (user->getFirstTime()) {
+		time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+		user->setEntersChat(now);
+        user->setClientFd(client_fd);
+        _usersMap.insert(std::pair<int, User*>(client_fd, user));
+	}
+    return user;
+}
+
+void Server::_read_command(char buffer[BUFFER_SIZE], int client_fd, User *user) {
+    (void)client_fd; //eliminar
+    std::string line(buffer);
+    user->setFistTime(false);
+	//Call Cmd constructor (commands parser) passing line written by client as argument
+	Cmd c(line, user);
 }
 
 void Server::_accept_client() {
@@ -169,22 +187,6 @@ void Server::_accept_client() {
     clients.push_back(_poll);
 
     std::cout << "New client connected" << std::endl;
-}
-
-
-void Server::_user_message(char buffer[BUFFER_SIZE], int client_fd, bool first_time) {
-	User *user = NULL;
-	std::string line(buffer);
-
-	first_time ? user = new User() : getUser(client_fd);
-	if (first_time) {
-		time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-		user->setEntersChat(now);
-	}
-	user->setClientFd(client_fd);
-	_usersMap.insert(std::pair<int, User*>(client_fd, user));
-	//Call Cmd constructor (commands parser) passing line written by client as argument
-	Cmd c(line, user, first_time);
 }
 
 

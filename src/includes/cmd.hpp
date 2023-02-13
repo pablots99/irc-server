@@ -25,10 +25,10 @@ class Cmd
 	private:
 		std::string 				_cmdName;
 		std::vector<std::string>	_cmdArgs;
-		void _handle_commands(std::string cmdName, std::vector<std::string> cmdArgs, User* user, bool first_time);
+		void _handle_commands(std::string cmdName, std::vector<std::string> cmdArgs, User* user);
 
 	public:
-		Cmd(std::string const& line, User* user, bool first_time);
+		Cmd(std::string const& line, User* user);
 		~Cmd();
 		Cmd(Cmd const& src);
 		Cmd& operator=(Cmd const& src);

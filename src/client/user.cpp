@@ -17,6 +17,7 @@ User::User(void)
 {
 	_onHold = false;
 	_isRegistered = false;
+	_firstTime = true;
 	_client_addr = new sockaddr_in();
 	_client_addr_size = new socklen_t(sizeof(_client_addr));
 }
@@ -119,6 +120,11 @@ const time_t 			&User::getEntersChat(void) const
 	return _entersChat;
 }
 
+const bool				&User::getFirstTime(void) const
+{
+	return _firstTime;
+}
+
 
 void					User::setClientFd(int client_fd)
 {
@@ -185,6 +191,11 @@ void					User::setIsRegistered(bool isRegistered)
 void					User::setEntersChat(time_t entersChat)
 {
 	_entersChat = entersChat;
+}
+
+void					User::setFistTime(bool firstTime)
+{
+	_firstTime = firstTime;
 }
 
 

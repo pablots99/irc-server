@@ -39,12 +39,12 @@ class Bbdd;
 class Server : public Bbdd
 {
 	private:
-	    unsigned int _port;
-	    int _sockfd;
-	    std::vector<pollfd> clients;
-		void _read_command(char buffer[BUFFER_SIZE], int fd);
-	    void _accept_client();
-		void _user_message(char buffer[BUFFER_SIZE], int client_fd, bool first_time);
+	    unsigned int 			_port;
+	    int 					_sockfd;
+	    std::vector<pollfd> 	clients;
+		void 					_read_command(char buffer[BUFFER_SIZE], int fd, User *user);
+	    void 					_accept_client();
+		User* 					_user_config(int fd);
 	    // void _recive_buffer();
 	    // void _send_buffer();
 
@@ -52,7 +52,7 @@ class Server : public Bbdd
 	    Server(unsigned int port);
 		~Server();
 	    int 			start();
-		void 			ping_check(int fd);
+		void 			ping_check();
 		void 			send_ping_to_user(int fd);
 };
 

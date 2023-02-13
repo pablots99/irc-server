@@ -24,7 +24,7 @@ class UserCmd {
 		UserCmd(UserCmd const& src);
 		UserCmd& operator=(UserCmd const& src);
 
-		void		execute(std::vector<std::string> cmdArgs, User* user, Reply* reply, bool first_time);
+		void		execute(std::vector<std::string> cmdArgs, User* user, Reply* reply);
 };
 
 

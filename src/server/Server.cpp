@@ -68,7 +68,7 @@ void 		Server::ping_check() {
         User *user = getUser(clients[i].fd);
         now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         time_t since_user_entered_chat = now - user->getEntersChat();
-        if (since_user_entered_chat >= 60 && (!user->getIsRegistered()))
+        if (since_user_entered_chat >= 120 && (!user->getIsRegistered()))
             throw std::runtime_error(CloseError(clients[i].fd,"Registration timeout"));
         if (user->getOnHold()) {
             now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());

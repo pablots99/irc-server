@@ -6,14 +6,18 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 18:04:56 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/04 19:23:48 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/02/12 22:29:58 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/user.hpp"
 
+
 User::User(void)
 {
+	_onHold = false;
+	_isRegistered = false;
+	_firstTime = true;
 	_client_addr = new sockaddr_in();
 	_client_addr_size = new socklen_t(sizeof(_client_addr));
 }
@@ -36,9 +40,9 @@ User&			User::operator=(User const& src)
 {
 	if (this != &src)
 	{
-		_client_fd = src.getClientFd();
-		_client_addr = new sockaddr_in(*src.getClientAddr());
-		_client_addr_size = new socklen_t(*src.getClientAddrSize());
+		_client_fd = src.getFd();
+		_client_addr = new sockaddr_in(*src.getAddr());
+		_client_addr_size = new socklen_t(*src.getAddrSize());
 		_nickname = src.getNickname();
 		_username = src.getUsername();
 		_mode = src.getMode();
@@ -47,20 +51,22 @@ User&			User::operator=(User const& src)
 	return *this;
 }
 
+//std::map<int, User> 		User::usersFdMap;
 
-const int		&User::getClientFd(void) const
+
+const int		&User::getFd(void) const
 {
 	return _client_fd;
 }
 
 
-struct sockaddr_in*		User::getClientAddr(void) const
+struct sockaddr_in*		User::getAddr(void) const
 {
 	return _client_addr;
 }
 
 
-socklen_t*				User::getClientAddrSize(void) const
+socklen_t*				User::getAddrSize(void) const
 {
 	return _client_addr_size;
 }
@@ -87,6 +93,36 @@ const std::string		&User::getMode(void) const
 const std::string		&User::getRealname(void) const
 {
 	return _realname;
+}
+
+const bool				&User::getOnHold(void) const
+{
+	return _onHold;
+}
+
+const time_t 			&User::getPingSent(void) const
+{
+	return _pingSent;
+}
+
+const time_t 			&User::getPingReceived(void) const
+{
+	return _pingReceived;
+}
+
+const bool				&User::getIsRegistered(void) const
+{
+	return _isRegistered;
+}
+
+const time_t 			&User::getEntersChat(void) const
+{
+	return _entersChat;
+}
+
+const bool				&User::getFirstTime(void) const
+{
+	return _firstTime;
 }
 
 
@@ -129,6 +165,37 @@ void					User::setMode(std::string mode)
 void					User::setRealname(std::string realname)
 {
 	_realname = realname;
+}
+
+void					User::setOnHold(bool onHold)
+{
+	_onHold = onHold;
+}
+
+void					User::setPingSent(time_t pingSent)
+{
+	_pingSent = pingSent;
+}
+
+
+void					User::setPingReceived(time_t pingReceived)
+{
+	_pingReceived = pingReceived;
+}
+
+void					User::setIsRegistered(bool isRegistered)
+{
+	_isRegistered = isRegistered;
+}
+
+void					User::setEntersChat(time_t entersChat)
+{
+	_entersChat = entersChat;
+}
+
+void					User::setFistTime(bool firstTime)
+{
+	_firstTime = firstTime;
 }
 
 

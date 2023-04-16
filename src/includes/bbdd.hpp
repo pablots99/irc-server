@@ -1,27 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   bbdd.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/04 17:49:12 by ptorres           #+#    #+#             */
-/*   Updated: 2023/02/04 18:02:43 by nlutsevi         ###   ########.fr       */
+/*   Created: 2023/02/11 22:01:19 by nlutsevi          #+#    #+#             */
+/*   Updated: 2023/02/12 21:58:00 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef BBDD_HPP
+# define BBDD_HPP
 
-#include <iostream>
-#include "includes/Server.hpp"
+# include <map>
+# include "user.hpp"
 
-#define PORT 3490
+class User;
 
-int main() { 
+class Bbdd {
+	public:
+		Bbdd();
+		~Bbdd();
+		Bbdd(Bbdd const& src);
+		Bbdd& operator=(Bbdd const& src);
 
-    Server *server = new Server(PORT);
+		std::map<int, User*>		_usersMap;
+		void					addUser(User* user);
+		void					removeUser(User* user);
+		User*					getUser(int fd);
+		
+};
 
-    server->start();
 
-    delete(server);
-    return 0;
-}
+# endif

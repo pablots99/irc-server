@@ -10,13 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/server.hpp"
-#include "../includes/user.hpp"
-#include "../includes/cmd.hpp"
+#include "../includes/Server.hpp"
 
-Server::Server(const unsigned int port): _port(port)
+Server::Server(unsigned int port) : Bbdd()
 {
-
+	this->_port = port;
     //Socket creation
     _sockfd = socket(SOCKET_DOMAIN,SOCKET_TYPE,SOCKET_PROTOCOL);
     if (_sockfd == 0)
@@ -52,6 +50,43 @@ Server::Server(const unsigned int port): _port(port)
     std::cout << "Server created" << std::endl;
 }
 
+Server::~Server() {
+    shutdown(this->_sockfd,SHUT_RDWR);
+    //TODO use iterators instead of size
+    for (size_t i = 1; i < this->clients.size(); i++) {
+        shutdown(this->clients[i].fd,SHUT_RDWR);
+        close(this->clients[i].fd);
+    }
+    close(this->_sockfd);
+}
+
+void 		Server::ping_check() {
+	time_t now;
+    time_t since_last_ping;
+    for (size_t i = 1; i < this->clients.size(); i++) {
+        
+        User *user = getUser(clients[i].fd);
+        now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        time_t since_user_entered_chat = now - user->getEntersChat();
+        if (since_user_entered_chat >= 120 && (!user->getIsRegistered()))
+            throw std::runtime_error(CloseError(clients[i].fd,"Registration timeout"));
+        if (user->getOnHold()) {
+            now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            since_last_ping = now - user->getPingSent();
+            if (since_last_ping >= 120) {
+                std::cout << "User " << user->getUsername() << " has been disconnected for inactivity" << std::endl;
+                close(clients[i].fd);
+                clients.erase(clients.begin() + clients[i].fd);
+                _usersMap.erase(clients[i].fd);
+            }
+        }
+        //TODO:Since last message
+        if (user->getIsRegistered())
+            send_ping_to_user(clients[i].fd);
+    }   
+}
+    
+
 int Server::start() {
     std::cout << "Server listening in port: " << this->_port << "..." << std::endl;
     while (true)
@@ -63,7 +98,7 @@ int Server::start() {
         param: -1 is the timeout, -1 means that function will block indefinitely until an event occurs
         return: poll_result is the number of clients with data available to read
         */
-        if(poll(clients.data(), clients.size(), -1) == -1)
+        if(poll(clients.data(), clients.size(), PING_TIMEOUT_MS) == -1)
         {
             std::cerr << "Error polling sockets" << std::endl;
             break ;
@@ -72,26 +107,15 @@ int Server::start() {
         If it did occur, this expression will evaluate to true meeaning there is a new client*/
         if(clients[0].revents & POLLIN) {
             _accept_client();
-			//TODO: After a client is accepted he needs to register. The recommended order of commands during registration is as follows: 
-			//TODO: Figure out which ones to use in our IRC
-				//- CAP LS 302
-				//- PASS
-				//- NICK and USER
-				//- Capability Negotiation
-				//- SASL (if negotiated)
-				//- CAP END
-			
         }
-
-
-        //TODO Class client to do this actions
         for (size_t i = 1; i < clients.size(); i++) {
+            User *user = _user_config(clients[i].fd);
             if (clients[i].revents & POLLIN) {
                 char buffer[BUFFER_SIZE];
                 int received = recv(clients[i].fd, buffer, sizeof(buffer), 0);
                 std::cout << "fd_: " << clients[i].fd << " events: " << clients[i].events << " reverts: " << clients[i].revents << std::endl;
                 //Read commands send by client
-				_read_command(buffer, clients[i].fd);
+				_read_command(buffer, clients[i].fd, user);
                 if (received < 0) {
                     std::cerr << "Error receiving data from client" << std::endl;
                     continue;
@@ -109,6 +133,7 @@ int Server::start() {
                 }
             }
         }
+        ping_check();
     }
 
     return 1;
@@ -125,12 +150,31 @@ int Server::start() {
 // }
 
 
-void Server::_read_command(char buffer[BUFFER_SIZE], int client_fd) {
-	//TODO: Define logic for existing users
-	//Logic to register a new user
-	_user_first_message(buffer, client_fd);
-	
-	
+User*   Server::_user_config(int client_fd) {
+    User *user = getUser(client_fd);
+    if (user == NULL)
+        user = new User();
+    //For testing:
+    //else {
+    //    _usersMap.erase(_usersMap.begin(), _usersMap.end());
+    //    user = new User();
+    //}
+    if (user->getFirstTime()) {
+		time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+		user->setEntersChat(now);
+        user->setClientFd(client_fd);
+        _usersMap.insert(std::pair<int, User*>(client_fd, user));
+        user->setFistTime(false);
+	}
+    return user;
+}
+
+void Server::_read_command(char buffer[BUFFER_SIZE], int client_fd, User *user) {
+    (void)client_fd; //eliminar
+    std::string line(buffer);
+    user->setFistTime(false);
+	//Call Cmd constructor (commands parser) passing line written by client as argument
+	Cmd c(line, user);
 }
 
 void Server::_accept_client() {
@@ -152,25 +196,16 @@ void Server::_accept_client() {
 }
 
 
-void Server::_user_first_message(char buffer[BUFFER_SIZE], int client_fd) {
-
-	User	*user = new User();
-	std::string line(buffer);
-
-	user->setClientFd(client_fd);
-	//Call Cmd constructor passing line written by client as argument
-	Cmd c(line, user);
+void Server::send_ping_to_user(int fd) {
+	time_t now;
+	User *user = getUser(fd);
+	//TODO: apapt to actual ping from irc-hispano
+	std::string ping = "PING :irc.42.fr\r\n";
+	send(fd, ping.c_str(), ping.length(), 0);
+	now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	user->setPingSent(now);
+	user->setOnHold(true);
 }
 
 
 
-Server::~Server() {
-    
-    shutdown(this->_sockfd,SHUT_RDWR);
-    //TODO use iterators instead of size
-    for (size_t i = 1; i < this->clients.size(); i++) {
-         shutdown(this->clients[i].fd,SHUT_RDWR);
-         close(this->clients[i].fd);
-    }
-    close(this->_sockfd);
-}

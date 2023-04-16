@@ -1,27 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   generatePingRandomString.cpp                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/04 17:49:12 by ptorres           #+#    #+#             */
-/*   Updated: 2023/02/04 18:02:43 by nlutsevi         ###   ########.fr       */
+/*   Created: 2023/02/12 18:58:26 by nlutsevi          #+#    #+#             */
+/*   Updated: 2023/02/12 22:25:56 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+# include <string>
 
-#include <iostream>
-#include "includes/Server.hpp"
-
-#define PORT 3490
-
-int main() { 
-
-    Server *server = new Server(PORT);
-
-    server->start();
-
-    delete(server);
-    return 0;
+std::string generatePingRandomString(int length) {
+	(void)length;
+	return "1234567890";
 }

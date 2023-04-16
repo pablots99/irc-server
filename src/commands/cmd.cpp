@@ -6,18 +6,18 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:33:31 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/06 19:51:48 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/02/12 20:08:44 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/cmd.hpp"
 # include "../includes/utils.hpp"
 # include "../includes/reply.hpp"
+# include "../includes/cmds/userCmd.hpp"
 # include <iostream>
 
 Cmd::Cmd(std::string const& line, User* user)
-//Assuming space as command deimiter and command name is first parameter.
-//TODO: need to be adapted to actual RFC 1459
+//TODO: /r/n need to be managed
 {
 	std::vector<std::string> tmp;
 	std::vector<std::string> tmp2;
@@ -66,16 +66,30 @@ const std::vector<std::string>& Cmd::getCmdArgs() const
 
 void Cmd::_handle_commands(std::string cmdName, std::vector<std::string> cmdArgs, User* user)
 {
+	Reply *r = new Reply(); 
 	if (cmdName == "USER")
 	{
-		//TODO: User Class needs to be created to handle USER command, meanwhile:	
-		if (cmdArgs.size() < 4)
-			throw std::runtime_error(Error(ERR_NEEDMOREPARAMS));
-		//TODO: Parse: each arg is in correct format
-		user->setUsername(cmdArgs[0]);
-		user->setMode(cmdArgs[1]);
-		//user->setUnused(cmdArgs[2]);
-		user->setRealname(cmdArgs[3]);
+		UserCmd *u = new UserCmd();
+		u->execute(cmdArgs, user, r);
+		delete u;
 	}
+	else if (cmdName == "NICK")
+	{
+		nickCmd *n = new nickCmd();
+		n->execute(cmdArgs, user, r);
+		delete n;
+		//todo: to be configured by Pablo P
+	}
+	else if (cmdName == "PASS")
+	{
+		//TODO: to be implemented from args received in main -> see irc subject
+	}
+	else if (cmdName == "QUIT")
+	{
+		//TODO: need to be implemented
+	}
+	else
+		r->notify(user->getFd(), r->Error(ERR_NOTREGISTERED, cmdName));
+	delete r;
 
 }

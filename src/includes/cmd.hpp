@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:06:03 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/04 19:45:57 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/02/12 22:02:42 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,18 @@
 # define CMD_HPP
 
 # include "user.hpp"
+# include "./cmds/nickCmd.hpp"
 # include <string>
 # include <vector>
+
+class User;
+class Nick;
 
 class Cmd
 {
 	private:
-		std::string _cmdName;
-		std::vector<std::string> _cmdArgs;
+		std::string 				_cmdName;
+		std::vector<std::string>	_cmdArgs;
 		void _handle_commands(std::string cmdName, std::vector<std::string> cmdArgs, User* user);
 
 	public:

@@ -33,6 +33,7 @@
 # define SOCKET_PROTOCOL 0 // 0 -> IP protocol
 # define MAX_CLIENTS 1024
 # define BUFFER_SIZE 1024
+# define PING_TIMEOUT_MS 60
 
 class Bbdd;
 

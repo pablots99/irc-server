@@ -15,10 +15,12 @@
 # define CMD_HPP
 
 # include "user.hpp"
+# include "./cmds/nickCmd.hpp"
 # include <string>
 # include <vector>
 
 class User;
+class Nick;
 
 class Cmd
 {

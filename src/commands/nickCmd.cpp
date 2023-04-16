@@ -29,7 +29,9 @@ nickCmd&		nickCmd::operator=(nickCmd const& src) {
 }
 
 void			nickCmd::execute(std::vector<std::string> cmdArgs, User* user, Reply* reply) {
-	(void)cmdArgs;
-	(void)user;
-	(void)reply;
+	if(cmdArgs.size() < 1)
+		reply->notify(user->getFd(), reply->Error(ERR_NEEDMOREPARAMS, "NICK"));
+	user->setNickname(cmdArgs[0]);
+	if (user->getUsername() != "")
+		user->setIsRegistered(true);
 }

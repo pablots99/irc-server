@@ -62,7 +62,7 @@ Server::~Server() {
 
 void 		Server::ping_check() {
 	time_t now;
-    //time_t since_last_ping;
+    time_t since_last_ping;
     for (size_t i = 1; i < this->clients.size(); i++) {
         
         User *user = getUser(clients[i].fd);
@@ -70,18 +70,19 @@ void 		Server::ping_check() {
         time_t since_user_entered_chat = now - user->getEntersChat();
         if (since_user_entered_chat >= 60 && (!user->getIsRegistered()))
             throw std::runtime_error(CloseError(clients[i].fd,"Registration timeout"));
-        //if (user->getOnHold()) {
-        //    now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-        //    since_last_ping = now - user->getPingSent();
-        //    if (since_last_ping >= 120) {
-        //        std::cout << "User " << user->getUsername() << " has been disconnected for inactivity" << std::endl;
-        //        close(clients[i].fd);
-        //        clients.erase(clients.begin() + clients[i].fd);
-        //        _usersMap.erase(clients[i].fd);
-        //    }
-        //}
+        if (user->getOnHold()) {
+            now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            since_last_ping = now - user->getPingSent();
+            if (since_last_ping >= 120) {
+                std::cout << "User " << user->getUsername() << " has been disconnected for inactivity" << std::endl;
+                close(clients[i].fd);
+                clients.erase(clients.begin() + clients[i].fd);
+                _usersMap.erase(clients[i].fd);
+            }
+        }
         //TODO:Since last message
-        //send_ping_to_user(clients[i].fd);
+        if (user->getIsRegistered())
+            send_ping_to_user(clients[i].fd);
     }   
 }
     
@@ -97,7 +98,7 @@ int Server::start() {
         param: -1 is the timeout, -1 means that function will block indefinitely until an event occurs
         return: poll_result is the number of clients with data available to read
         */
-        if(poll(clients.data(), clients.size(), -1) == -1)
+        if(poll(clients.data(), clients.size(), PING_TIMEOUT_MS) == -1)
         {
             std::cerr << "Error polling sockets" << std::endl;
             break ;
@@ -153,12 +154,17 @@ User*   Server::_user_config(int client_fd) {
     User *user = getUser(client_fd);
     if (user == NULL)
         user = new User();
-        
+    //For testing:
+    //else {
+    //    _usersMap.erase(_usersMap.begin(), _usersMap.end());
+    //    user = new User();
+    //}
     if (user->getFirstTime()) {
 		time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 		user->setEntersChat(now);
         user->setClientFd(client_fd);
         _usersMap.insert(std::pair<int, User*>(client_fd, user));
+        user->setFistTime(false);
 	}
     return user;
 }

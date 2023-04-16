@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 # include "../includes/cmds/userCmd.hpp"
-# include "../includes/reply.hpp"
 
 UserCmd::UserCmd() {}
 
@@ -30,12 +29,13 @@ void		UserCmd::execute(std::vector<std::string> cmdArgs, User* user, Reply* repl
 {
 	if (cmdArgs.size() < 4)
 		reply->notify(user->getFd(), reply->Error(ERR_NEEDMOREPARAMS, "USER"));
-	if (!user->getFirstTime())
-		reply->notify(user->getFd(), reply->Error(ERR_ALREADYREGISTRED, "USER"));
+	//if (!user->getFirstTime())
+	//	reply->notify(user->getFd(), reply->Error(ERR_ALREADYREGISTRED, "USER"));
 	//TODO: Parse: each arg is in correct format
 	user->setUsername(cmdArgs[0]);
 	user->setMode(cmdArgs[1]);
 	//user->setUnused(cmdArgs[2]);
 	user->setRealname(cmdArgs[3]);
-	//TODO: once NICK get nick from fd is prepared, check if nick exists and send first PING
+	if (user->getNickname() != "")
+		user->setIsRegistered(true);
 }

@@ -75,6 +75,9 @@ void Cmd::_handle_commands(std::string cmdName, std::vector<std::string> cmdArgs
 	}
 	else if (cmdName == "NICK")
 	{
+		nickCmd *n = new nickCmd();
+		n->execute(cmdArgs, user, r);
+		delete n;
 		//todo: to be configured by Pablo P
 	}
 	else if (cmdName == "PASS")

@@ -17,6 +17,8 @@
 # include "../user.hpp"
 # include "../reply.hpp"
 
+class Reply;
+
 class nickCmd {
 	public:
 		nickCmd();

@@ -55,7 +55,7 @@ std::string 				CloseError(int client_fd, std::string error)
 	std::string		err;
 
 	//TODO add host
-	err = " :Closing link: [" + error + "]\r\n";
+	err = "ERROR :Closing link: [" + error + "]\r\n";
 	if (send(client_fd, err.c_str(), err.size(), 0) == -1)
 		throw std::runtime_error("Error sending message to client");
 	return err;

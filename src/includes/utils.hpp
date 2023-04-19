@@ -18,7 +18,7 @@
 # include <vector>
 
 std::vector<std::string> 	splitString(std::string const& str, char delim);
-std::string					generatePingRandomString(int length);
+std::string					generatePingRandomString(void);
 
 
 #endif

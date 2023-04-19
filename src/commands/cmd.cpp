@@ -88,6 +88,12 @@ void Cmd::_handle_commands(std::string cmdName, std::vector<std::string> cmdArgs
 	{
 		//TODO: need to be implemented
 	}
+	else if (cmdName == "PONG")
+	{
+		PongCmd *p = new PongCmd();
+		p->execute(cmdArgs, user, r);
+		delete p;
+	}
 	else
 		r->notify(user->getFd(), r->Error(ERR_NOTREGISTERED, cmdName));
 	delete r;

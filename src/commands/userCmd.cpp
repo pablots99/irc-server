@@ -36,6 +36,4 @@ void		UserCmd::execute(std::vector<std::string> cmdArgs, User* user, Reply* repl
 	user->setMode(cmdArgs[1]);
 	//user->setUnused(cmdArgs[2]);
 	user->setRealname(cmdArgs[3]);
-	if (user->getNickname() != "")
-		user->setIsRegistered(true);
 }

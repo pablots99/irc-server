@@ -32,6 +32,4 @@ void			nickCmd::execute(std::vector<std::string> cmdArgs, User* user, Reply* rep
 	if(cmdArgs.size() < 1)
 		reply->notify(user->getFd(), reply->Error(ERR_NEEDMOREPARAMS, "NICK"));
 	user->setNickname(cmdArgs[0]);
-	if (user->getUsername() != "")
-		user->setIsRegistered(true);
 }

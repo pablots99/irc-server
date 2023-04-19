@@ -95,6 +95,11 @@ const std::string		&User::getRealname(void) const
 	return _realname;
 }
 
+const std::string		&User::getPingMsg(void) const
+{
+	return _pingMsg;
+}
+
 const bool				&User::getOnHold(void) const
 {
 	return _onHold;
@@ -165,6 +170,11 @@ void					User::setMode(std::string mode)
 void					User::setRealname(std::string realname)
 {
 	_realname = realname;
+}
+
+void					User::setPingMsg(std::string pingMsg)
+{
+	_pingMsg = pingMsg;
 }
 
 void					User::setOnHold(bool onHold)

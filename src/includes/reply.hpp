@@ -14,7 +14,7 @@
 # define REPLY_HPP
 
 # define ERR_NEEDMOREPARAMS "461" // Not enough parameters
-# define ERR_ALREADYREGISTRED "462" //  You may not reregister
+# define ERR_ALREADYREGISTERED "462" //  You may not reregister
 # define ERR_NOTREGISTERED "451" // You have not registered
 # define ERR_NEEDPONG "513" // Pong on registration not correct
 

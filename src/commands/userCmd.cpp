@@ -29,11 +29,8 @@ void		UserCmd::execute(std::vector<std::string> cmdArgs, User* user, Reply* repl
 {
 	if (cmdArgs.size() < 4)
 		reply->notify(user->getFd(), reply->Error(ERR_NEEDMOREPARAMS, "USER"));
-	//if (!user->getFirstTime())
-	//	reply->notify(user->getFd(), reply->Error(ERR_ALREADYREGISTRED, "USER"));
-	//TODO: Parse: each arg is in correct format
+	if (user->getIsRegistered())
+		reply->notify(user->getFd(), reply->Error(ERR_ALREADYREGISTERED, "USER"));
 	user->setUsername(cmdArgs[0]);
-	user->setMode(cmdArgs[1]);
-	//user->setUnused(cmdArgs[2]);
 	user->setRealname(cmdArgs[3]);
 }

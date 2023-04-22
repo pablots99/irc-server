@@ -35,8 +35,8 @@ std::string		Reply::Error(std::string errCode, std::string cmd)
 
 	if (errCode == ERR_NEEDMOREPARAMS)
 		err = " :Not enough parameters";
-	if (errCode == ERR_ALREADYREGISTRED)
-		err = " :Unauthorized command (already registered)";
+	if (errCode == ERR_ALREADYREGISTERED)
+		err = " :You may not reregister";
 	if (errCode == ERR_NOTREGISTERED)
 		err = " :You have not registered";
 	return err + "\r\n";

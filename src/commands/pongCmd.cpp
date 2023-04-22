@@ -33,6 +33,7 @@ void			PongCmd::execute(std::vector<std::string> cmdArgs, User* user, Reply* rep
 	//reset timer
 	std::string	ping_msg;
 	std::string	line;
+	std::string welcome_msg;
 	ping_msg = user->getPingMsg();
 	if (cmdArgs.size() < 1)
 		reply->notify(user->getFd(), reply->Error(ERR_NEEDMOREPARAMS, "PONG"));
@@ -47,6 +48,8 @@ void			PongCmd::execute(std::vector<std::string> cmdArgs, User* user, Reply* rep
 		//user->setPingSent(NULL);
 		if (!user->getIsRegistered())
 			user->setIsRegistered(true);
+			welcome_msg = "irc :Wecome to the IRC\n\r";
+			send(user->getFd(), welcome_msg.c_str(), welcome_msg.length(), 0);
 	}
 	else if (!ping_msg.empty() && ping_msg != cmdArgs[0] && !user->getIsRegistered())
 		throw std::runtime_error(CloseError(user->getFd(), "Incorrect ping reply for registration"));

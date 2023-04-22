@@ -154,10 +154,10 @@ User*   Server::_user_config(int client_fd) {
     if (user == NULL)
         user = new User();
     //Delete users - for testing:
-    else {
-        _usersMap.erase(_usersMap.begin(), _usersMap.end());
-        user = new User();
-    }
+    //else {
+    //    _usersMap.erase(_usersMap.begin(), _usersMap.end());
+    //    user = new User();
+    //}
     if (user->getFirstTime()) {
 		time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 		user->setEntersChat(now);

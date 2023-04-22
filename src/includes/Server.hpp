@@ -27,6 +27,7 @@
 # include "bbdd.hpp"
 # include "cmd.hpp"
 # include "reply.hpp"
+# include "utils.hpp"
 
 # define SOCKET_DOMAIN AF_INET // AF_ LOCAL -> localhost, AF_INET -> ipv4, AF_INET_6 -> ipv6
 # define SOCKET_TYPE SOCK_STREAM //SOCK_STREAM -> TCP, SOCK_DGRAM -> UDP
@@ -36,6 +37,7 @@
 # define PING_TIMEOUT_MS 60
 
 class Bbdd;
+class Utils;
 
 class Server : public Bbdd
 {

@@ -35,8 +35,8 @@ std::string		Reply::Error(std::string errCode, std::string cmd)
 
 	if (errCode == ERR_NEEDMOREPARAMS)
 		err = " :Not enough parameters";
-	if (errCode == ERR_ALREADYREGISTRED)
-		err = " :Unauthorized command (already registered)";
+	if (errCode == ERR_ALREADYREGISTERED)
+		err = " :You may not reregister";
 	if (errCode == ERR_NOTREGISTERED)
 		err = " :You have not registered";
 	return err + "\r\n";
@@ -55,7 +55,7 @@ std::string 				CloseError(int client_fd, std::string error)
 	std::string		err;
 
 	//TODO add host
-	err = " :Closing link: [" + error + "]\r\n";
+	err = "ERROR :Closing link: [" + error + "]\r\n";
 	if (send(client_fd, err.c_str(), err.size(), 0) == -1)
 		throw std::runtime_error("Error sending message to client");
 	return err;

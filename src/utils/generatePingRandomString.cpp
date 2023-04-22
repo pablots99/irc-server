@@ -12,7 +12,17 @@
 
 # include <string>
 
-std::string generatePingRandomString(int length) {
-	(void)length;
-	return "1234567890";
+std::string generatePingRandomString() {
+	std::string	random_str;
+	static const unsigned char symbols[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz"
+        "!$/%()=?^_;\\|@#~[]{},-'+";
+	random_str.reserve(10);
+	for (int i = 0; i < 10; ++i) {
+		unsigned char c = symbols[rand() % (sizeof(symbols) - 1)];
+        random_str.push_back(c);
+	}
+	return random_str;
 }

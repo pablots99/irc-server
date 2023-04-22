@@ -14,9 +14,11 @@
 # define PONGCMD_HPP
 
 # include <iostream>
+#include <sstream>
 # include "../user.hpp"
 # include "../reply.hpp"
 
+class Reply;
 
 class PongCmd {
 	public:

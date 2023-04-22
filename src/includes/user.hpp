@@ -29,6 +29,7 @@ class User {
 		std::string _username;
 		std::string	_mode;
 		std::string _realname;
+		std::string _pingMsg;
 		bool 					_onHold;
 		time_t					_pingSent;
 		time_t					_pingReceived;
@@ -58,6 +59,7 @@ class User {
 		const std::string 				&getUsername() const;
 		const std::string 				&getMode() const;
 		const std::string 				&getRealname() const;
+		const std::string				&getPingMsg() const;
 		const bool 						&getOnHold() const;
 		const time_t 					&getPingSent() const;
 		const time_t 					&getPingReceived() const;
@@ -80,6 +82,7 @@ class User {
 		void setUsername(std::string username);
 		void setMode(std::string mode);
 		void setRealname(std::string realname);
+		void setPingMsg(std::string pingMsg);
 		void setOnHold(bool onHold);
 		void setPingSent(time_t pingSent);
 		void setPingReceived(time_t pingReceived);

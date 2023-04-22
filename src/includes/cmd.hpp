@@ -16,11 +16,9 @@
 
 # include "user.hpp"
 # include "./cmds/nickCmd.hpp"
+# include "./cmds/pongCmd.hpp"
 # include <string>
 # include <vector>
-
-class User;
-class Nick;
 
 class Cmd
 {

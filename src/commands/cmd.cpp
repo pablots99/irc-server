@@ -6,14 +6,13 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:33:31 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/04/23 14:55:45 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/04/23 15:32:27 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/cmd.hpp"
 # include "../includes/utils.hpp"
 # include "../includes/reply.hpp"
-# include "../includes/cmds/userCmd.hpp"
 # include <iostream>
 
 Cmd::Cmd(std::string const& line, User* user)
@@ -77,9 +76,7 @@ void Cmd::_handle_commands(std::string cmdName, std::vector<std::string> cmdArgs
 	Reply *r = new Reply(); 
 	if (cmdName == "USER")
 	{
-		UserCmd *u = new UserCmd();
-		u->execute(cmdArgs, user, r);
-		delete u;
+		userCmd(cmdArgs, user, r);
 	}
 	else if (cmdName == "NICK")
 	{
@@ -95,12 +92,8 @@ void Cmd::_handle_commands(std::string cmdName, std::vector<std::string> cmdArgs
 	}
 	else if (cmdName == "PONG")
 	{
-		PongCmd *p = new PongCmd();
-		p->execute(cmdArgs, user, r);
-		delete p;
+		pongCmd(cmdArgs, user, r);
 	}
-	//else
-	//	r->notify(user->getFd(), r->Error(ERR_NOTREGISTERED, cmdName));
 	delete r;
 
 }
@@ -130,4 +123,40 @@ void		Cmd::nickCmd(std::vector<std::string> cmdArgs, User* user, Reply* reply) {
 		return Bbdd::updateUserNick(user, nick);
 	user->setNickname(nick);
 	Bbdd::addNick(nick, user->getFd());
+}
+
+void			Cmd::userCmd(std::vector<std::string> cmdArgs, User* user, Reply* reply) {
+	if (cmdArgs.size() > 4)
+		return;
+	if (cmdArgs.size() < 4)
+		reply->notify(user->getFd(), reply->Error(ERR_NEEDMOREPARAMS, "USER"));
+	if (user->getIsRegistered())
+		reply->notify(user->getFd(), reply->Error(ERR_ALREADYREGISTERED, "USER"));
+	user->setUsername(cmdArgs[0]);
+	user->setRealname(cmdArgs[3]);
+}
+
+void			Cmd::pongCmd(std::vector<std::string> cmdArgs, User* user, Reply* reply) {
+	std::string	ping_msg;
+	std::string	line;
+	std::string welcome_msg;
+	ping_msg = user->getPingMsg();
+	if (cmdArgs.size() < 1)
+		reply->notify(user->getFd(), reply->Error(ERR_NEEDMOREPARAMS, "PONG"));
+	//pong receved without previous ping
+	if (ping_msg.empty())
+		return;
+	std::istringstream iss(cmdArgs[0]);
+	std::getline(iss, line, '\n');
+	if (ping_msg == line || (":" + ping_msg) == line) {
+		user->setOnHold(false);
+		user->setPingMsg("");
+		//user->setPingSent(NULL);
+		if (!user->getIsRegistered())
+			user->setIsRegistered(true);
+			welcome_msg = "irc :Wecome to the IRC\n\r";
+			send(user->getFd(), welcome_msg.c_str(), welcome_msg.length(), 0);
+	}
+	else if (!ping_msg.empty() && ping_msg != cmdArgs[0] && !user->getIsRegistered())
+		throw std::runtime_error(CloseError(user->getFd(), "Incorrect ping reply for registration"));
 }

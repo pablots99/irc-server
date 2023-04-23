@@ -4,8 +4,6 @@ SRCS = 	src/server/bbdd.cpp \
 		src/server/Server.cpp \
 		src/main.cpp \
 		src/commands/cmd.cpp \
-		src/commands/userCmd.cpp \
-		src/commands/pongCmd.cpp \
 		src/utils/splitString.cpp \
 		src/utils/toUpperCase.cpp \
 		src/utils/nicknameCheck.cpp \

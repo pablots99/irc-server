@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:55:02 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/12 18:59:54 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/04/23 13:15:23 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 std::vector<std::string> 	splitString(std::string const& str, char delim);
 std::string					generatePingRandomString(void);
-
+std::string                 toUpperCase(std::string str);
+std::string                 getValidNickname(const std::string& nickname);
 
 #endif

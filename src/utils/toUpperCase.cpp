@@ -1,32 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   userCmd.hpp                                        :+:      :+:    :+:   */
+/*   toUppercase.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/07 21:32:35 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/12 19:54:59 by nlutsevi         ###   ########.fr       */
+/*   Created: 2023/04/23 13:00:15 by nlutsevi          #+#    #+#             */
+/*   Updated: 2023/04/23 14:17:10 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef USERCMD_HPP
-# define USERCMD_HPP
-
-# include <iostream>
-# include "../user.hpp"
-# include "../reply.hpp"
-
-class UserCmd {
-	public:
-		UserCmd();
-		~UserCmd();
-		UserCmd(UserCmd const& src);
-		UserCmd& operator=(UserCmd const& src);
-
-		void		execute(std::vector<std::string> cmdArgs, User* user, Reply* reply);
-};
+#include <string>
+#include <cctype>
 
 
-
-# endif
+std::string toUpperCase(std::string str) {
+    for (std::string::size_type i = 0; i < str.length(); i++) {
+        str[i] = std::toupper(str[i]);
+    }
+    return str;
+}

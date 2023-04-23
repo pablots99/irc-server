@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 19:34:27 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/12 22:04:27 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/04/23 14:11:47 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 # define ERR_ALREADYREGISTERED "462" //  You may not reregister
 # define ERR_NOTREGISTERED "451" // You have not registered
 # define ERR_NEEDPONG "513" // Pong on registration not correct
+# define ERR_ERRONEUSNICKNAME "432" // Erroneus nickname
+# define ERR_NICKNAMEINUSE "433" // Nickname is already in use
 
 # include <iostream>
 # include "Server.hpp"
@@ -29,7 +31,7 @@ class Reply
 		Reply(Reply const& src);
 		Reply& operator=(Reply const& src);
 
-		static std::string		Error(std::string errCode, std::string cmd);
+		static std::string		Error(std::string errCode, std::string cmd, std::string nickname="");
 		void				    notify(int client_fd, const std::string &msg);
 
 };

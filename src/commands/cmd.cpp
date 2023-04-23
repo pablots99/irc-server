@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:33:31 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/12 20:08:44 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/04/23 14:55:45 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,16 @@ Cmd::Cmd(std::string const& line, User* user)
 		tmp2.push_back(tmp[1]);
 	}
 	_cmdName = tmp2[0];
-	for (size_t i = 1; i < tmp2.size(); i++)
-		_cmdArgs.push_back(tmp2[i]);
+	for (size_t i = 1; i < tmp2.size(); i++) {
+		if (tmp2[i].find('\n') != std::string::npos) {
+        	std::string remaining = tmp2[i].substr(0, tmp2[i].find('\n'));
+        	_cmdArgs.push_back(remaining);
+        	break;
+    	}
+    	else {
+        	_cmdArgs.push_back(tmp2[i]);
+		}
+	}
 	_handle_commands(_cmdName, _cmdArgs, user);
 }
 
@@ -75,10 +83,7 @@ void Cmd::_handle_commands(std::string cmdName, std::vector<std::string> cmdArgs
 	}
 	else if (cmdName == "NICK")
 	{
-		nickCmd *n = new nickCmd();
-		n->execute(cmdArgs, user, r);
-		delete n;
-		//todo: to be configured by Pablo P
+		nickCmd(cmdArgs, user, r);
 	}
 	else if (cmdName == "PASS")
 	{
@@ -94,8 +99,35 @@ void Cmd::_handle_commands(std::string cmdName, std::vector<std::string> cmdArgs
 		p->execute(cmdArgs, user, r);
 		delete p;
 	}
-	else
-		r->notify(user->getFd(), r->Error(ERR_NOTREGISTERED, cmdName));
+	//else
+	//	r->notify(user->getFd(), r->Error(ERR_NOTREGISTERED, cmdName));
 	delete r;
 
+}
+
+void		Cmd::nickCmd(std::vector<std::string> cmdArgs, User* user, Reply* reply) {
+	std::string	nick;
+	std::string valid_nick;
+	
+	if (cmdArgs.size() > 1)
+		return;
+	if(cmdArgs.size() < 1)
+		reply->notify(user->getFd(), reply->Error(ERR_NEEDMOREPARAMS, "NICK"));
+	valid_nick = getValidNickname(cmdArgs[0]);
+	if (valid_nick.empty())
+		reply->notify(user->getFd(), reply->Error(ERR_ERRONEUSNICKNAME, "NICK", cmdArgs[0]));
+	/*
+	In IRC, nicknames are case-insensitive. to avoid confusion,
+	IRC servers tipcally store and display nicknames in uppercase
+	characters.
+	*/
+	nick = toUpperCase(valid_nick);
+	// Check if nickname alredy exists in the server
+	if (Bbdd::nickExists(nick))
+		reply->notify(user->getFd(), reply->Error(ERR_NICKNAMEINUSE, "NICK", nick));
+	// Nickname change
+	if (user->getIsRegistered())
+		return Bbdd::updateUserNick(user, nick);
+	user->setNickname(nick);
+	Bbdd::addNick(nick, user->getFd());
 }

@@ -1,34 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   nickCmd.hpp                                        :+:      :+:    :+:   */
+/*   toUppercase.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/12 20:25:30 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/12 20:26:45 by nlutsevi         ###   ########.fr       */
+/*   Created: 2023/04/23 13:00:15 by nlutsevi          #+#    #+#             */
+/*   Updated: 2023/04/23 14:17:10 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef NICKCMD_HPP
-# define NICKCMD_HPP
-
-# include <iostream>
-# include "../user.hpp"
-# include "../reply.hpp"
-
-class Reply;
-
-class nickCmd {
-	public:
-		nickCmd();
-		~nickCmd();
-		nickCmd(nickCmd const& src);
-		nickCmd& operator=(nickCmd const& src);
-
-		void		execute(std::vector<std::string> cmdArgs, User* user, Reply* reply);
-};
+#include <string>
+#include <cctype>
 
 
-
-# endif
+std::string toUpperCase(std::string str) {
+    for (std::string::size_type i = 0; i < str.length(); i++) {
+        str[i] = std::toupper(str[i]);
+    }
+    return str;
+}

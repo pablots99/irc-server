@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:06:03 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/12 22:02:42 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/04/23 14:11:01 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,15 @@
 # define CMD_HPP
 
 # include "user.hpp"
-# include "./cmds/nickCmd.hpp"
+# include "bbdd.hpp"
+# include "reply.hpp"
 # include "./cmds/pongCmd.hpp"
 # include <string>
 # include <vector>
 
-class Cmd
+class Reply;
+
+class Cmd : public Bbdd
 {
 	private:
 		std::string 				_cmdName;
@@ -35,7 +38,7 @@ class Cmd
 
 		const std::string 				&getCmdName() const;
 		const std::vector<std::string> 	&getCmdArgs() const;
-	
+		void							nickCmd(std::vector<std::string> cmdArgs, User* user, Reply* reply);
 	
 };
 

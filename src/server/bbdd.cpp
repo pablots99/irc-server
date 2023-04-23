@@ -6,11 +6,12 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 22:05:25 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/12 21:36:43 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/04/23 14:06:14 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/bbdd.hpp"
+
 
 Bbdd::Bbdd(void) {
 }
@@ -44,4 +45,22 @@ User*	Bbdd::getUser(int fd) {
 	if (it != _usersMap.end())
 		return it->second;
 	return NULL;
+}
+
+void	Bbdd::addNick(std::string &nick, int fd) {
+	_nicksMap.insert(std::pair<std::string, int>(nick, fd));
+}
+
+void	Bbdd::removeNick(const std::string &nick) {
+	_nicksMap.erase(nick);
+}
+
+bool	Bbdd::nickExists(std::string &nick) {
+	return _nicksMap.count(nick);
+}
+
+void	Bbdd::updateUserNick(User *user, std::string &new_nick) {
+	removeNick(user->getNickname());
+	addNick(new_nick, user->getFd());
+	user->setNickname(new_nick);
 }

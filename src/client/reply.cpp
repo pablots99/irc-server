@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 19:40:36 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/12 22:04:13 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/04/23 14:11:55 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ Reply& Reply::operator=(Reply const& src)
 	return *this;
 }
 
-std::string		Reply::Error(std::string errCode, std::string cmd)
+std::string		Reply::Error(std::string errCode, std::string cmd, std::string nickname)
 {
 	std::string		err;
 
@@ -39,6 +39,10 @@ std::string		Reply::Error(std::string errCode, std::string cmd)
 		err = " :You may not reregister";
 	if (errCode == ERR_NOTREGISTERED)
 		err = " :You have not registered";
+	if (errCode == ERR_ERRONEUSNICKNAME)
+		err = nickname + " :Erroneus nickname";
+	if (errCode == ERR_NICKNAMEINUSE)
+		err = nickname + " :Nickname is already in use";
 	return err + "\r\n";
 }
 

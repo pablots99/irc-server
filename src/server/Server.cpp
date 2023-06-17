@@ -60,7 +60,7 @@ Server::~Server() {
     close(this->_sockfd);
 }
 
-void 		Server::ping_check() {
+void 					Server::ping_check() {
 	time_t now;
     time_t since_last_ping;
     for (size_t i = 1; i < this->clients.size(); i++) {   
@@ -68,13 +68,19 @@ void 		Server::ping_check() {
         now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         time_t since_user_entered_chat = now - user->getEntersChat();
         if (since_user_entered_chat >= 120 && (!user->getIsRegistered()))
-            throw std::runtime_error(CloseError(clients[i].fd,"Registration timeout"));
+		{
+			CloseError(clients[i].fd,"Registration timeout");
+			close(clients[i].fd);
+			clients.erase(clients.begin() + i);
+			_usersMap.erase(clients[i].fd);
+		}
         now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         since_last_ping = now - user->getPingSent();
         if (user->getOnHold() && since_last_ping >= 120) {
+			//TODO: remove user from all channels
             CloseError(clients[i].fd, "Ping timeout: 120 seconds");
             close(clients[i].fd);
-            clients.erase(clients.begin() + clients[i].fd);
+            clients.erase(clients.begin() + i);
             _usersMap.erase(clients[i].fd);
         }
         else if (user->getIsRegistered() && !user->getOnHold() && since_last_ping >= 120)
@@ -86,7 +92,7 @@ void 		Server::ping_check() {
 }
     
 
-int Server::start() {
+int 					Server::start() {
     std::cout << "Server listening in port: " << this->_port << "..." << std::endl;
     while (true)
     {
@@ -149,7 +155,7 @@ int Server::start() {
 // }
 
 
-User*   Server::_user_config(int client_fd) {
+User*   				Server::_user_config(int client_fd) {
     User *user = getUser(client_fd);
     if (user == NULL)
         user = new User();
@@ -168,7 +174,7 @@ User*   Server::_user_config(int client_fd) {
     return user;
 }
 
-void Server::_read_command(char buffer[BUFFER_SIZE], int client_fd, User *user) {
+void 					Server::_read_command(char buffer[BUFFER_SIZE], int client_fd, User *user) {
     (void)client_fd; //eliminar
     std::string line(buffer);
     user->setFistTime(false);
@@ -176,7 +182,7 @@ void Server::_read_command(char buffer[BUFFER_SIZE], int client_fd, User *user) 
 	Cmd c(line, user);
 }
 
-void Server::_accept_client() {
+void 					Server::_accept_client() {
     int new_client = accept(_sockfd, NULL, NULL);
     if (new_client < 0) {
         std::cerr << "Error accepting new connection" << std::endl;
@@ -195,7 +201,7 @@ void Server::_accept_client() {
 }
 
 
-void Server::send_ping_to_user(int fd) {
+void 					Server::send_ping_to_user(int fd) {
 	time_t now;
 	User *user = getUser(fd);
 	//TODO: apapt to actual ping from irc-hispano
@@ -207,6 +213,3 @@ void Server::send_ping_to_user(int fd) {
     user->setPingMsg(ping_msg);
 	user->setOnHold(true);
 }
-
-
-

@@ -54,9 +54,9 @@ class Server : public Bbdd
 	public:
 	    Server(unsigned int port);
 		~Server();
-	    int 			start();
-		void 			ping_check();
-		void 			send_ping_to_user(int fd);
+	    int 					start();
+		void 					ping_check();
+		void 					send_ping_to_user(int fd);
 };
 
 #endif

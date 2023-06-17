@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 19:40:36 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/04/23 14:11:55 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/06/17 19:06:18 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ std::string 				CloseError(int client_fd, std::string error)
 
 	//TODO add host
 	err = "ERROR :Closing link: [" + error + "]\r\n";
+
 	if (send(client_fd, err.c_str(), err.size(), 0) == -1)
 		throw std::runtime_error("Error sending message to client");
 	return err;

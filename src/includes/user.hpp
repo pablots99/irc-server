@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 18:22:58 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/02/12 22:26:38 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/06/17 19:40:43 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ class User {
         ~User();
 		User(User const& src);
 		User& operator=(User const& src);
-		//std::map<int, User> 			usersFdMap;
 
 		const int 						&getFd() const;
 		struct sockaddr_in* 			getAddr() const;

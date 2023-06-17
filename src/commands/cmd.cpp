@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:33:31 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/04/23 15:32:27 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/06/17 20:09:07 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,8 @@ void			Cmd::pongCmd(std::vector<std::string> cmdArgs, User* user, Reply* reply) 
 			welcome_msg = "irc :Wecome to the IRC\n\r";
 			send(user->getFd(), welcome_msg.c_str(), welcome_msg.length(), 0);
 	}
-	else if (!ping_msg.empty() && ping_msg != cmdArgs[0] && !user->getIsRegistered())
-		throw std::runtime_error(CloseError(user->getFd(), "Incorrect ping reply for registration"));
+	else if (!ping_msg.empty() && ping_msg != cmdArgs[0])
+		CloseError(user->getFd(), "Incorrect ping reply for registration");
+		close(user->getFd());
+        _usersMap.erase(user->getFd());
 }

@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:33:31 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/06/19 20:57:17 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/06/19 21:11:50 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,12 @@ Cmd::Cmd(std::string const& line, User* user)
 	std::vector<std::string> tmp2;
 	if (line.compare(0, 5, "PONG ") == 0) {
 		_cmdName = "PONG";
+		tmp = splitString(line.substr(5), ' ');
+		if (tmp.size() > 1) {
+			CloseError(user->getFd(), "Incorrect ping reply for registration");
+			close(user->getFd());
+        	_usersMap.erase(user->getFd());
+		}
 		_cmdArgs.push_back(line.substr(5));
 	}
 	else {

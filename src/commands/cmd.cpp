@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:33:31 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/06/17 20:09:07 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/06/19 20:57:17 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,29 @@ Cmd::Cmd(std::string const& line, User* user)
 {
 	std::vector<std::string> tmp;
 	std::vector<std::string> tmp2;
-	tmp = splitString(line, ':');
-	if (tmp.size() == 1)
-		tmp2 = splitString(line, ' ');
-	else
-	{
-		tmp2 = splitString(tmp[0], ' ');
-		tmp2.push_back(tmp[1]);
+	if (line.compare(0, 5, "PONG ") == 0) {
+		_cmdName = "PONG";
+		_cmdArgs.push_back(line.substr(5));
 	}
-	_cmdName = tmp2[0];
-	for (size_t i = 1; i < tmp2.size(); i++) {
-		if (tmp2[i].find('\n') != std::string::npos) {
-        	std::string remaining = tmp2[i].substr(0, tmp2[i].find('\n'));
-        	_cmdArgs.push_back(remaining);
-        	break;
-    	}
-    	else {
-        	_cmdArgs.push_back(tmp2[i]);
+	else {
+		tmp = splitString(line, ':');
+		if (tmp.size() == 1)
+			tmp2 = splitString(line, ' ');
+		else
+		{
+			tmp2 = splitString(tmp[0], ' ');
+			tmp2.push_back(tmp[1]);
+		}
+		_cmdName = tmp2[0];
+		for (size_t i = 1; i < tmp2.size(); i++) {
+			if (tmp2[i].find('\n') != std::string::npos) {
+	        	std::string remaining = tmp2[i].substr(0, tmp2[i].find('\n'));
+	        	_cmdArgs.push_back(remaining);
+	        	break;
+	    	}
+	    	else {
+	        	_cmdArgs.push_back(tmp2[i]);
+			}
 		}
 	}
 	_handle_commands(_cmdName, _cmdArgs, user);
@@ -148,17 +154,19 @@ void			Cmd::pongCmd(std::vector<std::string> cmdArgs, User* user, Reply* reply) 
 		return;
 	std::istringstream iss(cmdArgs[0]);
 	std::getline(iss, line, '\n');
-	if (ping_msg == line || (":" + ping_msg) == line) {
+	if (ping_msg.compare(line) == 0 || (":" + ping_msg).compare(line) == 0) {
 		user->setOnHold(false);
 		user->setPingMsg("");
 		//user->setPingSent(NULL);
-		if (!user->getIsRegistered())
+		if (!user->getIsRegistered()) {	
 			user->setIsRegistered(true);
 			welcome_msg = "irc :Wecome to the IRC\n\r";
 			send(user->getFd(), welcome_msg.c_str(), welcome_msg.length(), 0);
+		}
 	}
-	else if (!ping_msg.empty() && ping_msg != cmdArgs[0])
+	else if (!ping_msg.empty() && ping_msg != cmdArgs[0]) {
 		CloseError(user->getFd(), "Incorrect ping reply for registration");
 		close(user->getFd());
         _usersMap.erase(user->getFd());
+	}	
 }

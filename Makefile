@@ -9,7 +9,8 @@ SRCS = 	src/server/bbdd.cpp \
 		src/utils/nicknameCheck.cpp \
 		src/utils/generatePingRandomString.cpp \
 		src/client/reply.cpp \
-		src/client/user.cpp
+		src/client/user.cpp \
+		src/channels/channel.cpp
 		
 		
 

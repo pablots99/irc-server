@@ -73,6 +73,8 @@
 		"optional": "cpp",
 		"variant": "cpp",
 		"regex": "cpp",
-		"__functional_base": "cpp"
+		"__functional_base": "cpp",
+		"__functional_03": "cpp",
+		"list": "cpp"
 	}
 }

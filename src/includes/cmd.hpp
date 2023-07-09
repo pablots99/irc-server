@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:06:03 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/04/23 15:32:35 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/07/09 10:18:34 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ class Cmd : public Bbdd
 		void							nickCmd(std::vector<std::string> cmdArgs, User* user, Reply* reply);
 		void							userCmd(std::vector<std::string> cmdArgs, User* user, Reply* reply);
 		void							pongCmd(std::vector<std::string> cmdArgs, User* user, Reply* reply);
+		void							joinCmd(std::vector<std::string> cmdArgs, User* user, Reply* reply);
 };
 
 #endif

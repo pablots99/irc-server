@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 19:33:31 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/06/19 21:11:50 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/07/09 11:35:34 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,10 @@ void Cmd::_handle_commands(std::string cmdName, std::vector<std::string> cmdArgs
 	{
 		pongCmd(cmdArgs, user, r);
 	}
+	else if (cmdName == "JOIN")
+	{
+		joinCmd(cmdArgs, user, r);
+	}
 	delete r;
 
 }
@@ -175,4 +179,20 @@ void			Cmd::pongCmd(std::vector<std::string> cmdArgs, User* user, Reply* reply) 
 		close(user->getFd());
         _usersMap.erase(user->getFd());
 	}	
+}
+
+
+void			Cmd::joinCmd(std::vector<std::string> cmdArgs, User* user, Reply* reply) {
+	//User not registered error
+	if (!user->getIsRegistered())
+		reply->notify(user->getFd(), reply->Error(ERR_NOTREGISTERED, "JOIN"));
+	//No commands passed error
+	if (cmdArgs.size() < 1)
+		reply->notify(user->getFd(), reply->Error(ERR_NEEDMOREPARAMS, "JOIN"));
+	//TODO:: Invalid chanel mask error
+	//if (!isValidChannelMask(cmdArgs[0]))
+	//	reply->notify(user->getFd(), )
+	//Create new channel if channel don't exist
+	if (!doesChannelExist(cmdArgs[0]))
+		createNewChannel(cmdArgs[0], user);
 }

@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 22:05:25 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/04/23 14:06:14 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/07/09 11:37:03 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,14 @@ void	Bbdd::updateUserNick(User *user, std::string &new_nick) {
 	removeNick(user->getNickname());
 	addNick(new_nick, user->getFd());
 	user->setNickname(new_nick);
+}
+
+bool	Bbdd::doesChannelExist(std::string channelName) {
+	return std::find(this->_channelMap.begin(), this->_channelMap.end(), channelName) != this->_channelMap.end();
+}
+
+void	Bbdd::createNewChannel(std::string channelName, User *user) {
+	(void)channelName;
+	(void)user;
+	//TODO:: Create new Channel
 }

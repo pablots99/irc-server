@@ -6,7 +6,7 @@
 /*   By: nlutsevi <nlutsevi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 19:34:27 by nlutsevi          #+#    #+#             */
-/*   Updated: 2023/04/23 14:11:47 by nlutsevi         ###   ########.fr       */
+/*   Updated: 2023/07/09 10:36:41 by nlutsevi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # define ERR_NEEDPONG "513" // Pong on registration not correct
 # define ERR_ERRONEUSNICKNAME "432" // Erroneus nickname
 # define ERR_NICKNAMEINUSE "433" // Nickname is already in use
+# define ERR_BADCHANMASK "476" // Bad Channel Mask
 
 # include <iostream>
 # include "Server.hpp"
